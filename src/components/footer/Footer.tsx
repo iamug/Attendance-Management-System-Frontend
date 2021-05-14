@@ -1,5 +1,4 @@
 import React from "react";
-import CssBaseline from "@material-ui/core/CssBaseline";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Link from "@material-ui/core/Link";
@@ -21,7 +20,8 @@ const useStyles = makeStyles((theme) => ({
   footer: {
     backgroundColor: theme.palette.primary.main,
     color: "#ffffff",
-    padding: theme.spacing(6),
+    padding: theme.spacing(3),
+    height: '3vh'
   },
 }));
 
@@ -29,7 +29,6 @@ const Footer: React.FC = () => {
   const classes = useStyles();
   return (
     <React.Fragment>
-      <CssBaseline />
       <footer className={classes.footer}>
         <Copyright />
       </footer>

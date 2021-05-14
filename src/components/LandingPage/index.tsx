@@ -12,6 +12,7 @@ import Feat1 from "../../assets/images/feat1.png";
 import headerBanner from "../../assets/images/headerBanner.png";
 import phoneImg from "../../assets/images/phone.png";
 import Footer from "../../components/footer/Footer";
+import { Link } from "react-router-dom";
 
 const LandingPage: React.FC = () => {
   return (
@@ -36,14 +37,18 @@ const LandingPage: React.FC = () => {
                   alignItems="center"
                 >
                   <Grid item container justify="flex-end" xs={4} md={2}>
-                    <Button variant="contained" color="primary">
-                      Sign in
-                    </Button>
+                    <Link to={"/login"} style={{ textDecoration: "none" }}>
+                      <Button variant="contained" color="primary">
+                        Sign in
+                      </Button>
+                    </Link>
                   </Grid>
                   <Grid item container xs={4} md={2}>
-                    <Button variant="outlined" color="primary">
-                      Sign up
-                    </Button>
+                    <Link to={"/register"} style={{ textDecoration: "none" }}>
+                      <Button variant="outlined" color="primary">
+                        Sign up
+                      </Button>
+                    </Link>
                   </Grid>
                 </Grid>
               </Toolbar>

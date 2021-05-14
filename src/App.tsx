@@ -2,8 +2,10 @@ import React from "react";
 import "./App.css";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import LandingPage from "./components/LandingPage";
-import Header from "./components/header/Header";
-
+// import Header from "./components/header/Header";
+import Login from "./screens/auth/Login";
+import Register from "./screens/auth/Register";
+import ResetPassword from "./screens/auth/ResetPassword";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 const theme = createMuiTheme({
@@ -32,7 +34,10 @@ function App() {
       <ThemeProvider theme={theme}>
         {/* <Header /> */}
         <Switch>
-          <Route path="/" component={LandingPage} />
+          <Route path="/" exact component={LandingPage} />
+          <Route path="/login" component={Login} />
+          <Route path="/register" component={Register} />
+          <Route path="/reset-password" component={ResetPassword} />
         </Switch>
       </ThemeProvider>
     </Router>
