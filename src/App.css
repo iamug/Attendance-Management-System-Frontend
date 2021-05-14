@@ -1,4 +1,8 @@
-.App {
+* {
+  font-family: "Montserrat", "Spartan", sans-serif;
+}
+
+/* .App {
   text-align: center;
 }
 
@@ -36,4 +40,4 @@
   100% {
     transform: translateY(0px);
   }
-}
+} */
