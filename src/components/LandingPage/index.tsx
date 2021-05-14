@@ -52,17 +52,17 @@ const LandingPage: React.FC = () => {
                 <Typography variant="h6"></Typography>
                 <Grid
                   container
-                  spacing={0}
+                  spacing={2}
                   direction="row"
                   justify="flex-end"
                   alignItems="center"
                 >
-                  <Grid item container alignItems="flex-end" xs={4} md={2}>
+                  <Grid item container justify="flex-end" xs={4} md={2}>
                     <Button variant="contained" color="primary">
                       Sign in
                     </Button>
                   </Grid>
-                  <Grid item container alignItems="center" xs={4} md={2}>
+                  <Grid item container xs={4} md={2}>
                     <Button variant="outlined" color="primary">
                       Sign up
                     </Button>
@@ -112,8 +112,13 @@ const LandingPage: React.FC = () => {
                       </Typography>
                     </Box>
                   </Box>
-                  <Grid container spacing={5}>
-                    <Grid item container alignItems="center" xs={6}>
+                  <Grid
+                    container
+                    spacing={5}
+                    direction="row"
+                    justify="flex-start"
+                  >
+                    <Grid item container alignItems="center" xs={6} md={5}>
                       <Button
                         variant="contained"
                         size="large"
@@ -123,7 +128,7 @@ const LandingPage: React.FC = () => {
                         Clock In
                       </Button>
                     </Grid>
-                    <Grid item container alignItems="center" xs={6}>
+                    <Grid item container alignItems="center" xs={6} md={5}>
                       <Button
                         variant="contained"
                         size="large"
