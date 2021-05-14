@@ -8,34 +8,12 @@ import Toolbar from "@material-ui/core/Toolbar";
 import { Hidden } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import Link from "@material-ui/core/Link";
-import Feat1 from "./feat1.png";
-import headerBanner from "./headerBanner.png";
-import phoneImg from "./phone.png";
-
-function Copyright() {
-  return (
-    <Typography variant="body2" style={{ color: "#ffffff" }} align="center">
-      {"Copyright © "}
-      <Link color="inherit" href="#!">
-        Fpg Technologies and Solution, All rights reserved
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
-
-const useStyles = makeStyles((theme) => ({
-  footer: {
-    backgroundColor: theme.palette.primary.main,
-    color: "#ffffff",
-    padding: theme.spacing(6),
-  },
-}));
+import Feat1 from "../../assets/images/feat1.png";
+import headerBanner from "../../assets/images/headerBanner.png";
+import phoneImg from "../../assets/images/phone.png";
+import Footer from "../../components/footer/Footer";
 
 const LandingPage: React.FC = () => {
-  const classes = useStyles();
   return (
     <React.Fragment>
       <CssBaseline />
@@ -249,11 +227,7 @@ const LandingPage: React.FC = () => {
           </Grid>
         </Container>
       </main>
-      {/* Footer */}
-      <footer className={classes.footer}>
-        <Copyright />
-      </footer>
-      {/* End footer */}
+      <Footer />
     </React.Fragment>
   );
 };
