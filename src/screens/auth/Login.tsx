@@ -5,7 +5,6 @@ import backgroundImageVertical from "../../assets/images/bg_portrait.png";
 import Footer from "../../components/footer/Footer";
 import { Checkbox, Box, Typography, Button } from "@material-ui/core";
 import { Link } from "react-router-dom";
-import { Modal } from "react-responsive-modal";
 
 const Login: React.FC = () => {
   const classes = useStyles();
@@ -78,14 +77,6 @@ const Login: React.FC = () => {
           </form>
         </div>
       </div>
-      {/* <Modal open={showModal} onClose={() => setModal(false)}>
-        <h2>Simple centered modal</h2>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
-          pulvinar risus non risus hendrerit venenatis. Pellentesque sit amet
-          hendrerit risus, sed porttitor quam.
-        </p>
-      </Modal> */}
       <Footer />
     </React.Fragment>
   );

@@ -4,20 +4,22 @@ import { Toolbar, AppBar, Box } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import menuImg from "../../assets/images/menu.png";
-import { Modal } from "react-responsive-modal";
+import NavOverlay from "../../components/header/NavOverlay";
 
-const Header: React.FC = (props) => {
-  const [modalVisible, setModalVisible] = useState(false);
+const Header: React.FC = () => {
+  const [popModal, setModal] = useState(false);
+
+  const exitModal = (item: any) => {
+    setModal(item);
+  };
+
   const classes = useStyles();
-
   return (
     <div className={classes.root}>
       <AppBar position="static" className={classes.appBar}>
         <Toolbar variant="dense" className={classes.toolBar}>
           <IconButton
-            onClick={() => {
-              setModalVisible(true)
-            }}
+            onClick={() => setModal(true)}
             edge="start"
             className={classes.menuButton}
             color="inherit"
@@ -40,12 +42,43 @@ const Header: React.FC = (props) => {
           <div className={classes.avatar}></div>
         </Toolbar>
       </AppBar>
-
+      <NavOverlay showModal={popModal} exitModal={exitModal} />
     </div>
   );
 };
 
+const styles = {
+  modal: {
+    backgroundColor: "transparent",
+    boxShadow: "none",
+    display: "flex",
+    overflow: "none",
+    width: "50%",
+    padding: "0",
+    margin: "0",
+    height: "100vh",
+    minWidth: "50%",
+    justifyContent: "center",
+    zIndex: 1,
+  },
+  overlay: {
+    backgroundColor: "#1cccc",
+    padding: 0,
+  },
+  closeIcon: {
+    fill: "#fff",
+  },
+};
+
 const useStyles = makeStyles((theme) => ({
+  paper: {
+    position: "absolute",
+    width: 400,
+    backgroundColor: theme.palette.background.paper,
+    border: "2px solid #000",
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+  },
   root: {
     flexGrow: 1,
     // width: '100%'
