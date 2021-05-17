@@ -9,8 +9,12 @@ import { Hidden } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Feat1 from "../../assets/images/feat1.png";
+import Feat2 from "../../assets/images/feat2.png";
+import Feat3 from "../../assets/images/feat3.png";
 import headerBanner from "../../assets/images/headerBanner.png";
 import phoneImg from "../../assets/images/phone.png";
+import Feat1Feat2Line from "../../assets/images/feat1-feat2-line.png";
+import Feat2Feat3Line from "../../assets/images/feat2-feat3-line.png";
 import Footer from "../../components/footer/Footer";
 import { Link } from "react-router-dom";
 
@@ -130,7 +134,7 @@ const LandingPage: React.FC = () => {
                     <img
                       alt=""
                       src={phoneImg}
-                      style={{ width: "100%", marginTop: "0px" }}
+                      style={{ width: "100%", marginTop: "80px" }}
                     />
                   </Box>
                 </Grid>
@@ -168,7 +172,17 @@ const LandingPage: React.FC = () => {
               </div>
             </Grid>
           </Grid>
-          <hr style={{ margin: "80px" }} />
+
+          <div style={{ textAlign: "center" }}>
+            <Hidden smDown={true}>
+              <img src={Feat1Feat2Line} alt="" style={{ width: "48%" }} />
+            </Hidden>
+            <Hidden mdUp={true}>
+              <hr style={{ margin: "80px" }} />
+            </Hidden>
+          </div>
+
+          {/* <hr style={{ margin: "80px" }} /> */}
 
           <Grid container spacing={10}>
             <Grid
@@ -196,15 +210,22 @@ const LandingPage: React.FC = () => {
             </Grid>
 
             <Grid item container xs={12} md={6}>
-              <img alt="" src={Feat1} style={{ width: "100%" }} />
+              <img alt="" src={Feat2} style={{ width: "100%" }} />
             </Grid>
           </Grid>
 
-          <hr style={{ margin: "80px" }} />
+          <div style={{ textAlign: "center" }}>
+            <Hidden smDown={true}>
+              <img src={Feat2Feat3Line} alt="" style={{ width: "60%" }} />
+            </Hidden>
+            <Hidden mdUp={true}>
+              <hr style={{ margin: "80px" }} />
+            </Hidden>
+          </div>
 
           <Grid container spacing={10}>
             <Grid item xs={12} md={6}>
-              <img alt="" src={Feat1} style={{ width: "100%" }} />
+              <img alt="" src={Feat3} style={{ width: "100%" }} />
             </Grid>
             <Grid
               item

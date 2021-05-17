@@ -1,5 +1,5 @@
 import React from "react";
-import ResponsiveModal from "react-responsive-modal";
+// import ResponsiveModal from "react-responsive-modal";
 
 const styles = {
   modal: {
@@ -12,21 +12,21 @@ const styles = {
     margin: "0",
     height: "100%",
     minWidth: "100%",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   overlay: {
     backgroundColor: "#1cccc",
-    padding: 0
+    padding: 0,
   },
   closeIcon: {
-    fill: "#fff"
-  }
+    fill: "#fff",
+  },
 };
 
-const Search: React.FC = props => {
-//   const { setModalVisible, modalVisible } = props;
+const Search: React.FC = (props) => {
+  //   const { setModalVisible, modalVisible } = props;
   return (
-      <div>Hellp</div>
+    <div>Hellp</div>
     // <ResponsiveModal
     //   open={modalVisible}
     //   onClose={() => setModalVisible(false)}
@@ -42,4 +42,3 @@ const Search: React.FC = props => {
 };
 
 export default Search;
-

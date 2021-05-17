@@ -4,7 +4,7 @@ import { Toolbar, AppBar, Box } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import menuImg from "../../assets/images/menu.png";
-import { Modal } from "react-responsive-modal";
+// import { Modal } from "react-responsive-modal";
 
 const Header: React.FC = (props) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -16,7 +16,7 @@ const Header: React.FC = (props) => {
         <Toolbar variant="dense" className={classes.toolBar}>
           <IconButton
             onClick={() => {
-              setModalVisible(true)
+              setModalVisible(true);
             }}
             edge="start"
             className={classes.menuButton}
@@ -40,7 +40,6 @@ const Header: React.FC = (props) => {
           <div className={classes.avatar}></div>
         </Toolbar>
       </AppBar>
-
     </div>
   );
 };
