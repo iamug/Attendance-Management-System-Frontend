@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -47,7 +47,7 @@ const LandingPage: React.FC = () => {
                       </Button>
                     </Link>
                   </Grid>
-                  <Grid item container xs={4} md={2}>
+                  <Grid item container xs={5} md={2}>
                     <Link to={"/register"} style={{ textDecoration: "none" }}>
                       <Button variant="outlined" color="primary">
                         Sign up
