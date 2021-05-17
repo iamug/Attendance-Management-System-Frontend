@@ -7,7 +7,7 @@ import Modal from "@material-ui/core/Modal";
 
 interface ModalProps {
   showModal: boolean;
-  exitModal: any
+  exitModal: any;
 }
 
 const NavOverlay: React.FC<ModalProps> = (props) => {
@@ -23,7 +23,7 @@ const NavOverlay: React.FC<ModalProps> = (props) => {
   };
 
   const closeModal = () => {
-      props.exitModal(false)
+    props.exitModal(false);
   };
 
   const body = (
