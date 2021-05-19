@@ -1,7 +1,12 @@
 * {
   font-family: "Montserrat", "Spartan", sans-serif;
 }
-
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
 /* .App {
   text-align: center;
 }

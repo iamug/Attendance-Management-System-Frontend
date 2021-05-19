@@ -1,20 +1,23 @@
 import React from "react";
 import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import Link from "@material-ui/core/Link";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   footer: {
     backgroundColor: theme.palette.primary.main,
     color: "#ffffff",
     paddingTop: theme.spacing(3),
-    height: "5vh",
+    paddingBottom: theme.spacing(3),
+
     alignItems: "center",
     justifyContent: "center",
+    bottom: 0,
+    width: "100vW",
   },
   footerText: {
     color: "#ffffff",
-    fontSize: 18
+    fontSize: 18,
   },
 
   "@media (max-width: 768px)": {
