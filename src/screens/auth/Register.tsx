@@ -1,13 +1,73 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import backgroundImageHorizontal from "../../assets/images/bg_landscape.png";
 import backgroundImageVertical from "../../assets/images/bg_portrait.png";
 import Footer from "../../components/footer/Footer";
-import {Box, Typography, Button } from "@material-ui/core";
+import { Box, Typography, Button } from "@material-ui/core";
 import { Link } from "react-router-dom";
+import { useAppSelector, useAppDispatch } from "../../app/hooks";
+import {
+  registerAsync,
+  selectStateValues,
+} from "../../app/auth-redux/authSlice";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const Register: React.FC = () => {
+  const auth = useAppSelector(selectStateValues);
+  const dispatch = useAppDispatch();
   const classes = useStyles();
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [name, setName] = useState<string>("");
+  const [firstName, setFirstName] = useState<string>("");
+  const [lastName, setLastName] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+
+  const handleChangeEmail = (text: React.ChangeEvent<HTMLInputElement>) => {
+    const email = text.currentTarget.value;
+    setEmail(email);
+  };
+
+  const handleChangePassword = (text: React.ChangeEvent<HTMLInputElement>) => {
+    const password = text.currentTarget.value;
+    setPassword(password);
+  };
+
+  const handleChangeCP = (text: React.ChangeEvent<HTMLInputElement>) => {
+    const password = text.currentTarget.value;
+    setConfirmPassword(password);
+  };
+
+  const handleChangeName = (
+    text: React.ChangeEvent<HTMLInputElement>,
+    type: string
+  ) => {
+    const name = text.currentTarget.value;
+    if (type === "first") {
+      setFirstName(name);
+      return;
+    }
+    setLastName(name);
+  };
+
+  const registerUser = async () => {
+    if (password !== confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
+
+    const result = await dispatch(
+      registerAsync({
+        email,
+        password,
+        firstname: firstName,
+        lastname: lastName,
+      })
+    );
+    console.log("result");
+    console.log(result);
+  };
+
   return (
     <React.Fragment>
       <div className={classes.container}>
@@ -27,50 +87,55 @@ const Register: React.FC = () => {
                 type="text"
                 name="first_name"
                 placeholder="First Name"
-                // value={values.username}
-                // onChange={handleChange}
+                onChange={(text) => handleChangeName(text, "first")}
               />
               <input
                 className={classes.formInput}
                 type="text"
                 name="last_name"
                 placeholder="Last Name"
-                // value={values.username}
-                // onChange={handleChange}
+                onChange={(text) => handleChangeName(text, "last")}
               />
-                            <input
+              <input
                 className={classes.formInput}
                 type="email"
                 name="email"
                 placeholder="Email"
-                // value={values.username}
-                // onChange={handleChange}
+                onChange={(text) => handleChangeEmail(text)}
               />
               <input
                 className={classes.formInput}
                 type="password"
                 name="password"
                 placeholder="Password"
-                // value={values.username}
-                // onChange={handleChange}
+                onChange={(text) => handleChangePassword(text)}
               />
               <input
                 className={classes.formInput}
                 type="password"
                 name="confirm_password"
                 placeholder="Re-type Password"
-                // value={values.username}
-                // onChange={handleChange}
+                onChange={(text) => handleChangeCP(text)}
               />
             </div>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.authBtn}
-              size={"large"}
-            >
-              Register
-            </Button>
+
+            {auth.status === "idle" && (
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.authBtn}
+                size={"large"}
+                onClick={registerUser}
+              >
+                Register
+              </Button>
+            )}
+            {auth.status === "loading" && (
+              <CircularProgress
+                className={classes.progressBar}
+                color="primary"
+              />
+            )}
             <div className={classes.lastRow}>
               <span className={classes.lastRowTextBlack}>
                 Already have an account?
@@ -88,6 +153,11 @@ const Register: React.FC = () => {
 };
 
 const useStyles = makeStyles((theme) => ({
+  progressBar: {
+    display: "flex",
+    margin: "0 auto",
+    marginTop: 50,
+  },
   lastRow: {
     display: "flex",
     flexDirection: "row",

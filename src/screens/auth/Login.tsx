@@ -5,10 +5,33 @@ import backgroundImageVertical from "../../assets/images/bg_portrait.png";
 import Footer from "../../components/footer/Footer";
 import { Checkbox, Box, Typography, Button } from "@material-ui/core";
 import { Link } from "react-router-dom";
+import { useAppSelector, useAppDispatch } from "../../app/hooks";
+import { loginAsync, selectStateValues } from "../../app/auth-redux/authSlice";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const Login: React.FC = () => {
+  const auth = useAppSelector(selectStateValues);
+  const dispatch = useAppDispatch();
+
   const classes = useStyles();
-  const [showModal, setModal] = useState(false);
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+
+  const handleChangeEmail = (text: React.ChangeEvent<HTMLInputElement>) => {
+    const email = text.currentTarget.value;
+    setEmail(email);
+  };
+
+  const handleChangePassword = (text: React.ChangeEvent<HTMLInputElement>) => {
+    const password = text.currentTarget.value;
+    setPassword(password);
+  };
+
+  const loginUser = async () => {
+    const result = await dispatch(loginAsync({ email, password }));
+    console.log("result");
+    console.log(result);
+  };
 
   return (
     <React.Fragment>
@@ -29,16 +52,14 @@ const Login: React.FC = () => {
                 type="email"
                 name="email"
                 placeholder="Email"
-                // value={values.username}
-                // onChange={handleChange}
+                onChange={(text) => handleChangeEmail(text)}
               />
               <input
                 className={classes.formInput}
                 type="password"
                 name="password"
                 placeholder="Password"
-                // value={values.username}
-                // onChange={handleChange}
+                onChange={(text) => handleChangePassword(text)}
               />
               {/* {errors.username && <p>{errors.username}</p>} */}
             </div>
@@ -58,14 +79,23 @@ const Login: React.FC = () => {
                 </Link>
               </div>
             </div>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.authBtn}
-              size={"large"}
-            >
-              Sign In
-            </Button>
+            {auth.status === "idle" && (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.authBtn}
+                  size={"large"}
+                  onClick={loginUser}
+                >
+                  Sign In
+                </Button>
+              )}
+            {auth.status === "loading" && (
+              <CircularProgress
+                className={classes.progressBar}
+                color="primary"
+              />
+            )}
             <div className={classes.lastRow}>
               <span className={classes.lastRowTextBlack}>
                 Already have an account?
@@ -83,6 +113,11 @@ const Login: React.FC = () => {
 };
 
 const useStyles = makeStyles((theme) => ({
+  progressBar: {
+    display: "flex",
+    margin: "0 auto",
+    marginTop: 50,
+  },
   lastRow: {
     display: "flex",
     flexDirection: "row",
