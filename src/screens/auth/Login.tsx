@@ -8,11 +8,12 @@ import { Link } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { loginAsync, selectStateValues } from "../../app/auth-redux/authSlice";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import { useHistory } from "react-router-dom";
 
 const Login: React.FC = () => {
   const auth = useAppSelector(selectStateValues);
   const dispatch = useAppDispatch();
-
+  const history = useHistory();
   const classes = useStyles();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -31,6 +32,12 @@ const Login: React.FC = () => {
     const result = await dispatch(loginAsync({ email, password }));
     console.log("result");
     console.log(result);
+    if(result.payload.payload.auth){
+      history.push("/home");
+    }
+    else {
+      
+    }
   };
 
   return (
