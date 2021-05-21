@@ -6,6 +6,8 @@ import Header from "./components/header/NavHeader";
 import Login from "./screens/auth/Login";
 import Register from "./screens/auth/Register";
 import ResetPassword from "./screens/auth/ResetPassword";
+import Dashboard from "./components/Dashboard/Dashboard"
+import Activity from "./components/Activity/Activity"
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 const theme = createMuiTheme({
@@ -32,12 +34,13 @@ function App() {
   return (
     <Router>
       <ThemeProvider theme={theme}>
-        {/* <Header /> */}
         <Switch>
           <Route path="/" exact component={LandingPage} />
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
           <Route path="/reset-password" component={ResetPassword} />
+          <Route path="/dashboard" component={Dashboard} />
+          <Route path="/activities" component={Activity} />
         </Switch>
       </ThemeProvider>
     </Router>
