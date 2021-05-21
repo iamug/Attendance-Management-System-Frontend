@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import {Link,useHistory} from 'react-router-dom'
 import { makeStyles } from "@material-ui/core/styles";
 import { Toolbar, AppBar, Box } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
@@ -9,6 +10,10 @@ import NavOverlay from "../../components/header/NavOverlay";
 const Header: React.FC = () => {
   const [popModal, setModal] = useState(false);
 
+  const history = useHistory()
+
+  const location = history.location.pathname.split('/')[1]
+
   const exitModal = (item: any) => {
     setModal(item);
   };
@@ -16,7 +21,7 @@ const Header: React.FC = () => {
   const classes = useStyles();
   return (
     <div className={classes.root}>
-      <AppBar position="static" className={classes.appBar}>
+      {/* <AppBar position="static" className={classes.appBar}> */}
         <Toolbar variant="dense" className={classes.toolBar}>
           <IconButton
             onClick={() => setModal(true)}
@@ -28,20 +33,29 @@ const Header: React.FC = () => {
             <img src={menuImg} alt="menu" className={classes.img} />
           </IconButton>
           <div style={{ display: "flex", flexDirection: "row" }}>
+            {/* <Typography variant="h3" className={classes.menuBox}>
+              <Link to={"/"} style={{ textDecoration: "none" }}>
+                <Box className={classes.navText}>Home</Box>
+                { location == 'home'?<div className={classes.smallDot}></div> : null }
+              </Link>
+            </Typography> */}
             <Typography variant="h3" className={classes.menuBox}>
-              <Box className={classes.navText}>Home</Box>
-              <div className={classes.smallDot}></div>
+              <Link to={"/dashboard"} style={{ textDecoration: "none" }}>
+                <Box className={classes.navText}>Dashboard</Box> 
+                {location == 'dashboard'? <div className={classes.smallDot}></div> : null }   
+              </Link>
             </Typography>
             <Typography variant="h3" className={classes.menuBox}>
-              <Box className={classes.navText}>Dashboard</Box>
-            </Typography>
-            <Typography variant="h3" className={classes.menuBox}>
-              <Box className={classes.navText}>Activities</Box>
+              <Link to={"/activity"} style={{ textDecoration: "none" }}>
+                <Box className={classes.navText}>Activities</Box>
+                {location == 'activity'? <div className={classes.smallDot}></div> : null }         
+              </Link>
             </Typography>
           </div>
           <div className={classes.avatar}></div>
         </Toolbar>
-      </AppBar>
+        <hr style={{width:'90%',transform:'translateY(-8px)'}} />
+      {/* </AppBar> */}
       <NavOverlay showModal={popModal} exitModal={exitModal} />
     </div>
   );
@@ -81,6 +95,10 @@ const useStyles = makeStyles((theme) => ({
   },
   root: {
     flexGrow: 1,
+    padding:50,
+    paddingTop:0,
+    paddingBottom:0,
+    marginBottom:0,
     // width: '100%'
   },
   menuButton: {
@@ -95,8 +113,8 @@ const useStyles = makeStyles((theme) => ({
   },
   navText: {
     color: "#160547",
-    fontSize: 18,
-    fontWeight: 600,
+    fontSize: 15,
+    fontWeight: 500,
     marginBottom: 5,
     display: "none",
     [theme.breakpoints.up("sm")]: {
@@ -126,12 +144,12 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 10,
     margin: "0 auto",
     display: "none",
-    [theme.breakpoints.up("sm")]: {
+    [theme.breakpoints.up('sm')]: {
       display: "block",
     },
   },
   menuBox: {
-    margin: 30,
+    margin: 15,
   },
 }));
 

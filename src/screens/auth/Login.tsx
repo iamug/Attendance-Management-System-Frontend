@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import backgroundImageHorizontal from "../../assets/images/bg_landscape.png";
 import backgroundImageVertical from "../../assets/images/bg_portrait.png";
@@ -18,6 +18,16 @@ const Login: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
+  useEffect(() => {
+    async function checkAuth(){
+      const userStatus = localStorage.getItem('user-token');
+      if(userStatus){
+        history.push('/dashboard');
+      }
+    }
+    checkAuth()
+  }, [])
+
   const handleChangeEmail = (text: React.ChangeEvent<HTMLInputElement>) => {
     const email = text.currentTarget.value;
     setEmail(email);
@@ -33,10 +43,10 @@ const Login: React.FC = () => {
     console.log("result");
     console.log(result);
     if(result.payload.payload.auth){
-      history.push("/home");
+      history.push("/dashboard");
     }
     else {
-      
+
     }
   };
 

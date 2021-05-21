@@ -2,12 +2,12 @@ import React from "react";
 import "./App.css";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import LandingPage from "./components/LandingPage";
-import Header from "./components/header/NavHeader";
 import Login from "./screens/auth/Login";
 import Register from "./screens/auth/Register";
 import ResetPassword from "./screens/auth/ResetPassword";
 import Profile from "./screens/profile/Profile";
-import Activity from "./screens/activity/index";
+import Activity from "./screens/activity/";
+import Dashboard from "./components/Dashboard/Dashboard";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { useAppSelector } from "./app/hooks";
@@ -42,7 +42,6 @@ function App() {
   return (
     <Router>
       <ThemeProvider theme={theme}>
-        {/* <Header /> */}
         <Switch>
           <Route path="/" exact component={LandingPage} />
           <Route path="/login" component={Login} />
@@ -62,8 +61,13 @@ function App() {
             component={Activity}
             authenticationPath={"/login"}
           />
-          {/* <Route path="/profile" component={Profile} /> */}
-          <Route path="/activity" component={Activity} />
+          <ProtectedRoute
+            exact
+            path="/dashboard"
+            isAuthenticated={auth.isAuthenticated}
+            component={Dashboard}
+            authenticationPath={"/login"}
+          />
         </Switch>
       </ThemeProvider>
     </Router>
