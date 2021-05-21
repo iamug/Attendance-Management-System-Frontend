@@ -1,11 +1,9 @@
-import React, { useState } from "react";
-import {
-  withStyles,
-  Theme,
-  createStyles,
-  makeStyles,
-} from "@material-ui/core/styles";
+import React, { useState, useEffect } from "react";
+import { createStyles, makeStyles } from "@material-ui/core/styles";
+import { withStyles, Theme } from "@material-ui/core/styles";
 import Header from "../../components/header/NavHeader";
+import TextField from "@material-ui/core/TextField";
+import Box from "@material-ui/core/Box";
 import { Container, Grid, Button } from "@material-ui/core";
 import Footer from "../../components/footer/Footer";
 import Table from "@material-ui/core/Table";
@@ -18,6 +16,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { format } from "date-fns";
+import { DateRangePicker, DateRange } from "materialui-daterange-picker";
 
 const StyledTableCell = withStyles((theme: Theme) => ({
   head: {
@@ -83,11 +82,17 @@ const rows = [
 
 const useStyles = makeStyles({
   table: {},
+  datePickerWrapper: {
+    position: "absolute",
+  },
 });
 
 export default function ActivityHistory() {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [open, setOpen] = React.useState(false);
+  const [dateRange, setDateRange] = useState<DateRange>({});
+  const toggle = () => setOpen(!open);
   const classes = useStyles();
 
   const handleChangePage = (
@@ -98,11 +103,22 @@ export default function ActivityHistory() {
     setPage(newPage);
   };
 
+  const checkDatePickerValue = () => {
+    if (dateRange.startDate && dateRange.endDate) return true;
+    return false;
+  };
+
+  const handleDatePicker = () => {
+    return `${format(
+      new Date(dateRange.startDate || ""),
+      "dd-MMM-yy"
+    )} to  ${format(new Date(dateRange.endDate || ""), "dd-MMM-yy")}`;
+  };
+
   const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    console.log("rowsperpage", event.target.value);
-    setRowsPerPage(parseInt(event.target.value, 10));
+    setRowsPerPage(parseInt(e.target.value, 10));
     setPage(0);
   };
 
@@ -115,9 +131,31 @@ export default function ActivityHistory() {
             container
             spacing={5}
             direction="row"
-            justify="flex-end"
+            justify="space-between"
             style={{ marginBottom: "10px" }}
           >
+            <Grid item container alignItems="flex-end" xs={6} md={3}>
+              <Box width={1}>
+                <TextField
+                  id="outlined-basic"
+                  variant="outlined"
+                  size="small"
+                  fullWidth
+                  onClick={() => toggle()}
+                  value={
+                    checkDatePickerValue()
+                      ? handleDatePicker()
+                      : "Select  Date Range"
+                  }
+                />
+                <DateRangePicker
+                  open={open}
+                  toggle={toggle}
+                  wrapperClassName={classes.datePickerWrapper}
+                  onChange={(range) => setDateRange(range)}
+                />
+              </Box>
+            </Grid>
             <Grid item container alignItems="flex-end" xs={6} md={3}>
               <Button
                 variant="contained"
