@@ -33,12 +33,12 @@ const Header: React.FC = () => {
             <img src={menuImg} alt="menu" className={classes.img} />
           </IconButton>
           <div style={{ display: "flex", flexDirection: "row" }}>
-            <Typography variant="h3" className={classes.menuBox}>
+            {/* <Typography variant="h3" className={classes.menuBox}>
               <Link to={"/"} style={{ textDecoration: "none" }}>
                 <Box className={classes.navText}>Home</Box>
                 { location == 'home'?<div className={classes.smallDot}></div> : null }
               </Link>
-            </Typography>
+            </Typography> */}
             <Typography variant="h3" className={classes.menuBox}>
               <Link to={"/dashboard"} style={{ textDecoration: "none" }}>
                 <Box className={classes.navText}>Dashboard</Box> 
@@ -46,9 +46,9 @@ const Header: React.FC = () => {
               </Link>
             </Typography>
             <Typography variant="h3" className={classes.menuBox}>
-              <Link to={"/activities"} style={{ textDecoration: "none" }}>
+              <Link to={"/activity"} style={{ textDecoration: "none" }}>
                 <Box className={classes.navText}>Activities</Box>
-                {location == 'activities'? <div className={classes.smallDot}></div> : null }         
+                {location == 'activity'? <div className={classes.smallDot}></div> : null }         
               </Link>
             </Typography>
           </div>

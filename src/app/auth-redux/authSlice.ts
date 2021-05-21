@@ -5,6 +5,7 @@ import { loginUser, registerUser } from "./authAPI";
 export interface UserAuthState {
   status: "idle" | "loading" | "failed";
   userData: object;
+  isAuthenticated: true | false
 }
 
 interface UserData {
@@ -17,6 +18,7 @@ interface UserData {
 const initialState: UserAuthState = {
   status: "idle",
   userData: {},
+  isAuthenticated: false || !!localStorage.getItem('user-token')
 };
 
 export const loginAsync = createAsyncThunk(
@@ -39,9 +41,6 @@ export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    increment: (state) => {},
-    decrement: (state) => {},
-    incrementByAmount: (state, action: PayloadAction<number>) => {},
   },
   extraReducers: (builder) => {
     builder
@@ -49,20 +48,30 @@ export const authSlice = createSlice({
         state.status = "loading";
       })
       .addCase(loginAsync.fulfilled, (state, action) => {
-        state.userData = action.payload.payload;
+        if(action.payload?.payload){
+          state.userData = action.payload.payload;
+          localStorage.setItem('user-token', action.payload.payload.token)
+        }
+        state.userData = {};
+        state.isAuthenticated = true;
         state.status = "idle";
       })
       .addCase(registerAsync.pending, (state) => {
         state.status = "loading";
       })
       .addCase(registerAsync.fulfilled, (state, action) => {
-        state.userData = action.payload.payload;
+        if(action.payload?.payload){
+          state.userData = action.payload.payload;
+          localStorage.setItem('user-token', action.payload.payload.token)
+        }
+        state.userData = {};
+        state.isAuthenticated = true;
         state.status = "idle";
       });
   },
 });
 
-export const { increment, decrement, incrementByAmount } = authSlice.actions;
+export const { } = authSlice.actions;
 
 export const selectStateValues = (state: RootState) => state.auth;
 

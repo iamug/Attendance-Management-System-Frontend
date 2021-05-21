@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import backgroundImageHorizontal from "../../assets/images/bg_landscape.png";
 import backgroundImageVertical from "../../assets/images/bg_portrait.png";
@@ -8,14 +8,25 @@ import { Link } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { loginAsync, selectStateValues } from "../../app/auth-redux/authSlice";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import { useHistory } from "react-router-dom";
 
 const Login: React.FC = () => {
   const auth = useAppSelector(selectStateValues);
   const dispatch = useAppDispatch();
-
+  const history = useHistory();
   const classes = useStyles();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+
+  useEffect(() => {
+    async function checkAuth(){
+      const userStatus = localStorage.getItem('user-token');
+      if(userStatus){
+        history.push('/dashboard');
+      }
+    }
+    checkAuth()
+  }, [])
 
   const handleChangeEmail = (text: React.ChangeEvent<HTMLInputElement>) => {
     const email = text.currentTarget.value;
@@ -31,6 +42,12 @@ const Login: React.FC = () => {
     const result = await dispatch(loginAsync({ email, password }));
     console.log("result");
     console.log(result);
+    if(result.payload.payload.auth){
+      history.push("/dashboard");
+    }
+    else {
+
+    }
   };
 
   return (
