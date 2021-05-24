@@ -4,7 +4,7 @@ import { withStyles, Theme } from "@material-ui/core/styles";
 import Header from "../../components/header/NavHeader";
 import TextField from "@material-ui/core/TextField";
 import Box from "@material-ui/core/Box";
-import { Container, Grid, Button } from "@material-ui/core";
+import { Container, Grid, Button, Hidden } from "@material-ui/core";
 import Footer from "../../components/footer/Footer";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -17,6 +17,8 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { format } from "date-fns";
 import { DateRangePicker, DateRange } from "materialui-daterange-picker";
+import Drawer from "@material-ui/core/Drawer";
+import { rows } from "./data";
 
 const StyledTableCell = withStyles((theme: Theme) => ({
   head: {
@@ -38,56 +40,18 @@ const StyledTableRow = withStyles((theme: Theme) =>
   })
 )(TableRow);
 
-function createData(date: Date, clockin: Date, clockout: Date) {
-  return { date, clockin, clockout };
-}
-
-const rows = [
-  createData(
-    new Date("2020-02-14T23:00:00.000Z"),
-    new Date("2020-02-14T23:09:00.000Z"),
-    new Date("2020-02-14T21:35:00.000Z")
-  ),
-  createData(
-    new Date("2020-02-14T23:00:00.000Z"),
-    new Date("2020-02-14T23:09:00.000Z"),
-    new Date("2020-02-14T21:35:00.000Z")
-  ),
-  createData(
-    new Date("2020-02-14T23:00:00.000Z"),
-    new Date("2020-02-14T23:09:00.000Z"),
-    new Date("2020-02-14T21:35:00.000Z")
-  ),
-  createData(
-    new Date("2020-02-14T23:00:00.000Z"),
-    new Date("2020-02-14T23:09:00.000Z"),
-    new Date("2020-02-14T21:35:00.000Z")
-  ),
-  createData(
-    new Date("2020-02-14T23:00:00.000Z"),
-    new Date("2020-02-14T23:09:00.000Z"),
-    new Date("2020-02-14T21:35:00.000Z")
-  ),
-  createData(
-    new Date("2020-02-14T23:00:00.000Z"),
-    new Date("2020-02-14T23:09:00.000Z"),
-    new Date("2020-02-14T21:35:00.000Z")
-  ),
-  createData(
-    new Date("2020-02-14T23:00:00.000Z"),
-    new Date("2020-02-14T23:09:00.000Z"),
-    new Date("2020-02-14T21:35:00.000Z")
-  ),
-];
-
 const useStyles = makeStyles({
   table: {},
   datePickerWrapper: {
     position: "absolute",
   },
+  drawer: {
+    width: "70vw",
+  },
 });
 
 export default function ActivityHistory() {
+  const [openDrawer, setOpenDrawer] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [open, setOpen] = React.useState(false);
@@ -135,26 +99,40 @@ export default function ActivityHistory() {
             style={{ marginBottom: "10px" }}
           >
             <Grid item container alignItems="flex-end" xs={6} md={3}>
-              <Box width={1}>
-                <TextField
-                  id="outlined-basic"
-                  variant="outlined"
-                  size="small"
+              <Hidden smUp={true}>
+                <Button
+                  variant="contained"
+                  size="large"
                   fullWidth
-                  onClick={() => toggle()}
-                  value={
-                    checkDatePickerValue()
-                      ? handleDatePicker()
-                      : "Select  Date Range"
-                  }
-                />
-                <DateRangePicker
-                  open={open}
-                  toggle={toggle}
-                  wrapperClassName={classes.datePickerWrapper}
-                  onChange={(range) => setDateRange(range)}
-                />
-              </Box>
+                  color="secondary"
+                  onClick={() => setOpenDrawer(true)}
+                >
+                  Filter
+                </Button>
+              </Hidden>
+
+              <Hidden xsDown={true}>
+                <Box width={1}>
+                  <TextField
+                    id="outlined-basic"
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                    onClick={() => toggle()}
+                    value={
+                      checkDatePickerValue()
+                        ? handleDatePicker()
+                        : "Select  Date Range"
+                    }
+                  />
+                  <DateRangePicker
+                    open={open}
+                    toggle={toggle}
+                    wrapperClassName={classes.datePickerWrapper}
+                    onChange={(range) => setDateRange(range)}
+                  />
+                </Box>
+              </Hidden>
             </Grid>
             <Grid item container alignItems="flex-end" xs={6} md={3}>
               <Button
@@ -228,6 +206,16 @@ export default function ActivityHistory() {
         </Container>
       </main>
       <Footer />
+      <Drawer
+        anchor="right"
+        open={openDrawer}
+        onClose={() => setOpenDrawer(false)}
+        classes={{
+          paper: classes.drawer,
+        }}
+      >
+        <h2>hello world</h2>
+      </Drawer>
     </React.Fragment>
   );
 }
