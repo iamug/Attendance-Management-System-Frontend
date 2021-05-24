@@ -64,7 +64,7 @@ const LineChart:React.FC = () => {
 const useStyles = makeStyles((theme) => ({
 
     inner:{
-        width:'70%',
+        width:'90%',
         margin:'5rem auto',
         [theme.breakpoints.down("sm")]: {
          width: "95%"

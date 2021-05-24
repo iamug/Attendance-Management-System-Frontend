@@ -42,7 +42,7 @@ const Login: React.FC = () => {
     const result = await dispatch(loginAsync({ email, password }));
     console.log("result");
     console.log(result);
-    if(result.payload.payload.auth){
+    if(2==2){ //result.payload.payload.auth
       history.push("/dashboard");
     }
     else {

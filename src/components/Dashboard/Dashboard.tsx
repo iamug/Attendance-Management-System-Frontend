@@ -19,7 +19,7 @@ const Dashboard:React.FC = () => {
         <>
             <img src={background} className={classes.bkimage} alt="circular"/>
             <Header />
-            <Typography variant="h3" style={{padding:"0rem 6rem",marginBottom:'7rem'}}>
+            <Typography variant="h3" style={{padding:"0rem 4rem",marginBottom:'7rem'}}>
                 <h4 className={classes.name}>Welcome back, Paul</h4>
                 <Box className={classes.buttons}>
                     <Button className={classes.check} style={{backgroundColor:'#02C12C'}} variant="contained" color="secondary">
@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
     hours:{
         display:'flex',
         justifyContent:'space-between',
-        padding:"0rem 6rem",
+        padding:"0rem 4rem",
         [theme.breakpoints.down("sm")]: {
         padding: "0rem 2rem",
       }

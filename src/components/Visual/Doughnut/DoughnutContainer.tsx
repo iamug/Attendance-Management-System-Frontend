@@ -33,8 +33,8 @@ const DoughnutContainer = () => {
             >
                 <DoughnutType 
                 backgroundColor={["#EE4C19","#160547"]} 
-                data={[9.10,9.15]} 
-                myArray={[{tue:'9:10',fri:'09:10'  }]}       
+                data={[9.40,9.00]} 
+                myArray={[{tue:'9:40',fri:'09:00'  }]}       
                 right='true'   
                 />
             </Grid>

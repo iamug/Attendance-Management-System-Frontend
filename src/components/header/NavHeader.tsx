@@ -54,7 +54,7 @@ const Header: React.FC = () => {
           </div>
           <div className={classes.avatar}></div>
         </Toolbar>
-        <hr style={{width:'90%',transform:'translateY(-8px)'}} />
+        <hr style={{width:'95%',transform:'translateY(-8px)'}} />
       {/* </AppBar> */}
       <NavOverlay showModal={popModal} exitModal={exitModal} />
     </div>
@@ -95,7 +95,7 @@ const useStyles = makeStyles((theme) => ({
   },
   root: {
     flexGrow: 1,
-    padding:50,
+    padding:20,
     paddingTop:0,
     paddingBottom:0,
     marginBottom:0,

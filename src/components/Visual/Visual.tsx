@@ -96,7 +96,7 @@ createStyles({
   },
   recenter:{
     display:'flex',
-    padding:"0rem 6rem",
+    padding:"0rem 4rem",
     [theme.breakpoints.down("sm")]: {
         padding: "0 2rem",
       },
@@ -105,7 +105,7 @@ createStyles({
     display:'flex',
     justifyContent:'space-between',
     alignItems:'center',
-    padding:"0rem 6rem",
+    padding:"0rem 4rem",
     [theme.breakpoints.down("sm")]: {
         padding: "0 2rem",
       },
