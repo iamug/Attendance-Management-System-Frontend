@@ -6,7 +6,6 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Toolbar from "@material-ui/core/Toolbar";
 import { Hidden } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Feat1 from "../../assets/images/feat1.png";
 import Feat2 from "../../assets/images/feat2.png";
@@ -16,9 +15,15 @@ import phoneImg from "../../assets/images/phone.png";
 import Feat1Feat2Line from "../../assets/images/feat1-feat2-line.png";
 import Feat2Feat3Line from "../../assets/images/feat2-feat3-line.png";
 import Footer from "../../components/footer/Footer";
+import ClockInModal from "./ClockInModal";
+import ClockOutModal from "./ClockOutModal";
 import { Link } from "react-router-dom";
 
 const LandingPage: React.FC = () => {
+  const [open, setOpen] = useState(false);
+  const [openClockOutModal, setOpenClockOutModal] = useState(false);
+  const handleOpenClockInModal = () => setOpen(true);
+  const handleOpenClockOutModal = () => setOpenClockOutModal(true);
   return (
     <React.Fragment>
       <CssBaseline />
@@ -111,6 +116,7 @@ const LandingPage: React.FC = () => {
                           size="large"
                           fullWidth
                           color="secondary"
+                          onClick={handleOpenClockInModal}
                         >
                           Clock In
                         </Button>
@@ -121,6 +127,7 @@ const LandingPage: React.FC = () => {
                           size="large"
                           fullWidth
                           color="secondary"
+                          onClick={handleOpenClockOutModal}
                         >
                           Clock Out
                         </Button>
@@ -266,6 +273,8 @@ const LandingPage: React.FC = () => {
         </Container>
       </main>
       <Footer />
+      <ClockInModal open={open} setOpen={setOpen} />
+      <ClockOutModal open={openClockOutModal} setOpen={setOpenClockOutModal} />
     </React.Fragment>
   );
 };
