@@ -9,18 +9,17 @@ import axios from "axios";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { baseUrl } from "../../constants";
 import { useHistory, useLocation } from "react-router-dom";
-import queryString from 'query-string';
+import queryString from "query-string";
 
 const UpdatePassword: React.FC = () => {
   const [password, setPassword] = useState<string>("");
   const [cpassword, setCPassword] = useState<string>("");
   const [isLoading, setLoading] = useState<boolean>(false);
   const history = useHistory();
-  const {search} = useLocation();
-  const {token, email} = queryString.parse(search);
+  const { search } = useLocation();
+  const { token, email } = queryString.parse(search);
   const classes = useStyles();
-
-
+  const [showSentView, setSentView] = useState<boolean>(false);
 
   const resetPassword = async () => {
     if (password !== cpassword) {
@@ -32,13 +31,13 @@ const UpdatePassword: React.FC = () => {
       const response = await axios.post(`${baseUrl}/update-password`, {
         password,
         token,
-        email
+        email,
       });
       console.log(response.data);
       setLoading(false);
       if (!response.data.payload.error) {
-        alert(response.data.payload.message);
-        history.push("/login");
+        console.log(response.data.payload.message);
+        setSentView(true);
       }
     } catch (error) {
       console.log(error);
@@ -61,59 +60,83 @@ const UpdatePassword: React.FC = () => {
 
   return (
     <React.Fragment>
-      <div className={classes.container}>
-        <div className={classes.formContainer}>
-          <form className="form" noValidate>
-            <Typography
-              variant="h4"
-              color="primary"
-              align="center"
-              className={classes.header}
-            >
-              <Box color="primary.light">Update Password</Box>
-            </Typography>
-            <Box color="primary.light" className={classes.subHeader}>
-              We will send your Password to your email
-            </Box>
-
-            <div className={classes.formInputs}>
-              <input
-                className={classes.formInput}
-                type="password"
-                name="password"
-                placeholder="Enter Password"
-                onChange={handleChangePassword}
-              />
-            </div>
-            <div className={classes.formInputs}>
-              <input
-                className={classes.formInput}
-                type="password"
-                name="confirm_password"
-                placeholder="Confirm Password"
-                onChange={handleChangeCP}
-              />
-            </div>
-            {!isLoading && (
-              <Button
-                variant="contained"
+      {!showSentView ? (
+        <div className={classes.container}>
+          <div className={classes.formContainer}>
+            <form className="form" noValidate>
+              <Typography
+                variant="h4"
                 color="primary"
-                className={classes.authBtn}
-                size={"large"}
-                onClick={resetPassword}
+                align="center"
+                className={classes.header}
               >
-                Update
-              </Button>
-            )}
-            {isLoading && (
-              <CircularProgress
-                className={classes.progressBar}
-                color="primary"
-              />
-            )}
-          </form>
+                <Box color="primary.light">Update Password</Box>
+              </Typography>
+              <Box color="primary.light" className={classes.subHeader}>
+                We will send your Password to your email
+              </Box>
+
+              <div className={classes.formInputs}>
+                <input
+                  className={classes.formInput}
+                  type="password"
+                  name="password"
+                  placeholder="Enter Password"
+                  onChange={handleChangePassword}
+                />
+              </div>
+              <div className={classes.formInputs}>
+                <input
+                  className={classes.formInput}
+                  type="password"
+                  name="confirm_password"
+                  placeholder="Confirm Password"
+                  onChange={handleChangeCP}
+                />
+              </div>
+              {!isLoading && (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.authBtn}
+                  size={"large"}
+                  onClick={resetPassword}
+                >
+                  Update
+                </Button>
+              )}
+              {isLoading && (
+                <CircularProgress
+                  className={classes.progressBar}
+                  color="primary"
+                />
+              )}
+            </form>
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className={classes.container}>
+          <div className={classes.formContainer}>
+            <form className="form" noValidate>
+              <Typography
+                variant="h4"
+                color="primary"
+                align="center"
+                className={classes.header}
+              >
+                <Box color="primary.light">Password Updated Successfully</Box>
+              </Typography>
+              <Box color="primary.light" className={classes.subHeader}>
+                Kindly{" "}
+                <Link to={"/login"} style={{ textDecoration: "none", color:'red' }}>
+                  login
+                </Link>{" "}
+                to continue
+              </Box>
+            </form>
+          </div>
+        </div>
+      )}
       <Footer />
     </React.Fragment>
   );

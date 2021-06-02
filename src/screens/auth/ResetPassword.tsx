@@ -15,6 +15,7 @@ const ResetPassword: React.FC = () => {
   const [isLoading, setLoading] = useState<boolean>(false);
   const history = useHistory();
   const classes = useStyles();
+  const [showSentView, setSentView] = useState<boolean>(false);
 
   const authUser = async () => {
     if (email == "") {
@@ -29,8 +30,9 @@ const ResetPassword: React.FC = () => {
       console.log(response.data);
       setLoading(false);
       if (!response.data.payload.error) {
-        alert(response.data.payload.message);
-        history.push("/login");
+        console.log(response.data.payload.message);
+        setSentView(true);
+        // history.push("/login");
       }
     } catch (error) {
       setLoading(false);
@@ -47,7 +49,8 @@ const ResetPassword: React.FC = () => {
 
   return (
     <React.Fragment>
-      <div className={classes.container}>
+      {!showSentView ? (
+        <div className={classes.container}>
         <div className={classes.formContainer}>
           <form className="form" noValidate>
             <Typography
@@ -91,6 +94,25 @@ const ResetPassword: React.FC = () => {
           </form>
         </div>
       </div>
+      ) : (
+        <div className={classes.container}>
+        <div className={classes.formContainer}>
+          <form className="form" noValidate style={{marginTop: 50}}>
+            <Typography
+              variant="h4"
+              color="primary"
+              align="center"
+              className={classes.header}
+            >
+              <Box color="primary.light">Password Reset Link sent</Box>
+            </Typography>
+            <Box color="primary.light" className={classes.subHeader}>
+              Kindly check the provided email and follow the link to reset your password
+            </Box>
+          </form>
+        </div>
+      </div>
+      )}
       <Footer />
     </React.Fragment>
   );
