@@ -17,16 +17,17 @@ const Login: React.FC = () => {
   const classes = useStyles();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [message, setErrorMessage] = useState<string>("");
 
   useEffect(() => {
-    async function checkAuth(){
-      const userStatus = localStorage.getItem('user-token');
-      if(userStatus){
-        history.push('/dashboard');
+    async function checkAuth() {
+      const userStatus = localStorage.getItem("user-token");
+      if (userStatus) {
+        history.push("/dashboard");
       }
     }
-    checkAuth()
-  }, [])
+    checkAuth();
+  }, []);
 
   const handleChangeEmail = (text: React.ChangeEvent<HTMLInputElement>) => {
     const email = text.currentTarget.value;
@@ -42,11 +43,10 @@ const Login: React.FC = () => {
     const result = await dispatch(loginAsync({ email, password }));
     console.log("result");
     console.log(result);
-    if(result.payload.payload.auth){
+    if (result.payload.payload.auth) {
       history.push("/dashboard");
-    }
-    else {
-
+    } else {
+      setErrorMessage("Failed Authentication");
     }
   };
 
@@ -63,6 +63,9 @@ const Login: React.FC = () => {
             >
               <Box color="primary.light">Login</Box>
             </Typography>
+            <div className={classes.errorMsg}>
+              <p>{message}</p>
+            </div>
             <div className={classes.formInputs}>
               <input
                 className={classes.formInput}
@@ -78,7 +81,6 @@ const Login: React.FC = () => {
                 placeholder="Password"
                 onChange={(text) => handleChangePassword(text)}
               />
-              {/* {errors.username && <p>{errors.username}</p>} */}
             </div>
             <div className={classes.btmRow}>
               <div>
@@ -97,16 +99,16 @@ const Login: React.FC = () => {
               </div>
             </div>
             {auth.status === "idle" && (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  className={classes.authBtn}
-                  size={"large"}
-                  onClick={loginUser}
-                >
-                  Sign In
-                </Button>
-              )}
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.authBtn}
+                size={"large"}
+                onClick={loginUser}
+              >
+                Sign In
+              </Button>
+            )}
             {auth.status === "loading" && (
               <CircularProgress
                 className={classes.progressBar}
@@ -215,6 +217,10 @@ const useStyles = makeStyles((theme) => ({
     width: "30%",
     borderRadius: 10,
     textTransform: "capitalize",
+  },
+  errorMsg: {
+    color: "red",
+    margin: "0 auto",
   },
 
   "@media (max-width: 768px)": {

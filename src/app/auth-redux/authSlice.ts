@@ -5,7 +5,7 @@ import { loginUser, registerUser } from "./authAPI";
 export interface UserAuthState {
   status: "idle" | "loading" | "failed";
   userData: UserData;
-  isAuthenticated: true | false
+  isAuthenticated: true | false;
 }
 
 export interface UserData {
@@ -15,12 +15,14 @@ export interface UserData {
   lastname?: string;
 }
 
-const userStorage = JSON.parse(localStorage.getItem('user') as string) as UserData
+const userStorage = JSON.parse(
+  localStorage.getItem("user") as string
+) as UserData;
 
 const initialState: UserAuthState = {
   status: "idle",
-  userData:  userStorage ? userStorage : {},
-  isAuthenticated: false || !!localStorage.getItem('user-token')
+  userData: userStorage ? userStorage : {},
+  isAuthenticated: false || !!localStorage.getItem("user-token"),
 };
 
 export const loginAsync = createAsyncThunk(
@@ -42,18 +44,20 @@ export const registerAsync = createAsyncThunk(
 export const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(loginAsync.pending, (state) => {
         state.status = "loading";
       })
       .addCase(loginAsync.fulfilled, (state, action) => {
-        if(action.payload?.payload){
+        if (action.payload?.payload) {
           state.userData = action.payload.payload.user;
-          localStorage.setItem('user-token', action.payload.payload.token)
-          localStorage.setItem('user', JSON.stringify(action.payload.payload.user))
+          localStorage.setItem("user-token", action.payload.payload.token);
+          localStorage.setItem(
+            "user",
+            JSON.stringify(action.payload.payload.user)
+          );
         }
         state.isAuthenticated = true;
         state.status = "idle";
@@ -62,19 +66,22 @@ export const authSlice = createSlice({
         state.status = "loading";
       })
       .addCase(registerAsync.fulfilled, (state, action) => {
-        if(action.payload?.payload){
+        if (action.payload?.payload) {
           state.userData = action.payload.payload.user;
-          localStorage.setItem('user-token', action.payload.payload.token)
-          localStorage.setItem('user', JSON.stringify(action.payload.payload.user))
+          localStorage.setItem("user-token", action.payload.payload.token);
+          localStorage.setItem(
+            "user",
+            JSON.stringify(action.payload.payload.user)
+          );
         }
-      
+
         state.isAuthenticated = true;
         state.status = "idle";
       });
   },
 });
 
-export const { } = authSlice.actions;
+export const {} = authSlice.actions;
 
 export const selectStateValues = (state: RootState) => state.auth;
 
