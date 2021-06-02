@@ -149,7 +149,7 @@ export default function ActivityHistory() {
             <Table className={classes.table}>
               <TableHead>
                 <TableRow>
-                  <StyledTableCell>Days</StyledTableCell>
+                  <StyledTableCell>Day</StyledTableCell>
                   <StyledTableCell align="center">Date</StyledTableCell>
                   <StyledTableCell align="right">Clock In</StyledTableCell>
                   <StyledTableCell align="right">Clock Out</StyledTableCell>

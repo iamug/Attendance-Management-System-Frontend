@@ -9,24 +9,11 @@ import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
 import TextField from "@material-ui/core/TextField";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import Alert from "@material-ui/lab/Alert";
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import { Link } from "react-router-dom";
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    modal: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    paper: {
-      backgroundColor: theme.palette.background.paper,
-      border: "1px solid #cccccc",
-      boxShadow: theme.shadows[5],
-      padding: theme.spacing(2, 4, 3),
-      flexGrow: 0.15,
-    },
-  })
-);
+import { clockoutUserHomepage } from "../../app/clockOutAPI";
 
 interface ClockInModalProps {
   open: boolean;
@@ -39,10 +26,52 @@ const ClockOutModal: React.FC<ClockInModalProps> = ({
 }: ClockInModalProps) => {
   const classes = useStyles();
   const [email, setEmail] = useState("");
+  const [msg, setMsg] = useState("");
+  const [openSuccess, setOpenSuccess] = useState(false);
+  const [openFailure, setOpenFailure] = useState(false);
   const [loading, setLoading] = useState(false);
   const handleChangeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
   };
+
+  const clockOut = async () => {
+    if (openSuccess) {
+      console.log("already clocked out ");
+      return;
+    }
+    try {
+      setLoading(true);
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(async ({ coords }) => {
+          let location = { lat: coords.latitude, long: coords.longitude };
+          let response = await clockoutUserHomepage(email, location);
+          console.log("res", { data: response.data.payload });
+          if (response.status !== 200) handleFailure(response.data.payload);
+          if (response.status == 200) handleSuccess(response.data.payload);
+        });
+      } else {
+        console.log(" location failed");
+      }
+    } catch (error) {
+      console.log({ error });
+      //handleFailure(error.);
+    }
+  };
+
+  const handleSuccess = (msg: string) => {
+    //setLoading(false);
+    setMsg(msg);
+    setOpenSuccess(true);
+    return false;
+  };
+
+  const handleFailure = (msg: string) => {
+    //setLoading(false);
+    setMsg(msg);
+    setOpenFailure(true);
+    return false;
+  };
+
   return (
     <React.Fragment>
       <Modal
@@ -62,6 +91,10 @@ const ClockOutModal: React.FC<ClockInModalProps> = ({
               />
             </Box>
 
+            <Snackbar open={openSuccess || openFailure} autoHideDuration={6000}>
+              <Alert severity={openSuccess ? "success" : "error"}>{msg}</Alert>
+            </Snackbar>
+
             {loading && (
               <Box mt={8} mb={8}>
                 <Grid
@@ -72,17 +105,31 @@ const ClockOutModal: React.FC<ClockInModalProps> = ({
                   alignItems="center"
                 >
                   <Grid item container justify="center" xs={12}>
-                    <CircularProgress size="6rem" color="secondary" />
+                    {!(openSuccess || openFailure) && (
+                      <CircularProgress size="6rem" color="secondary" />
+                    )}
                   </Grid>
                   <Grid item container justify="center" xs={12}>
-                    <Typography
-                      component="h1"
-                      variant="h4"
-                      color="primary"
-                      gutterBottom
-                    >
-                      Processing...
-                    </Typography>
+                    <Box textAlign="center">
+                      <Typography
+                        component="h4"
+                        variant="h5"
+                        color={
+                          openSuccess
+                            ? "secondary"
+                            : openFailure
+                            ? "error"
+                            : "primary"
+                        }
+                        gutterBottom
+                      >
+                        {openSuccess
+                          ? `${msg}`
+                          : openFailure
+                          ? `${msg}`
+                          : "Processing..."}
+                      </Typography>
+                    </Box>
                   </Grid>
                 </Grid>
               </Box>
@@ -114,7 +161,7 @@ const ClockOutModal: React.FC<ClockInModalProps> = ({
                         variant="contained"
                         size="medium"
                         color="secondary"
-                        onClick={() => setLoading(true)}
+                        onClick={() => clockOut()}
                       >
                         Clock Out
                       </Button>
@@ -153,5 +200,23 @@ const ClockOutModal: React.FC<ClockInModalProps> = ({
     </React.Fragment>
   );
 };
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    modal: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    paper: {
+      backgroundColor: theme.palette.background.paper,
+      border: "1px solid #cccccc",
+      boxShadow: theme.shadows[5],
+      padding: theme.spacing(2, 4, 3),
+      flexGrow: 0.15,
+      borderRadius: "8px",
+    },
+  })
+);
 
 export default ClockOutModal;
