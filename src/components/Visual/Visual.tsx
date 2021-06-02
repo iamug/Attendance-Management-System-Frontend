@@ -25,7 +25,7 @@ const LineCharting:React.FC<properties> = ({instance,timing1,timing2}:properties
 const classes = useStyles();
 const [state, setState] = React.useState<{ choosen:any }>({
     // name: '',
-    choosen: '',
+    choosen: 'weekly',
 });
 const [month,setMonth] = useState<{monthName:string}>({monthName:moment().format('MMMM')})
 const [showmonth,setShowmonth] = useState<boolean>(false)
