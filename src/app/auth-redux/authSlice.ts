@@ -4,20 +4,22 @@ import { loginUser, registerUser } from "./authAPI";
 
 export interface UserAuthState {
   status: "idle" | "loading" | "failed";
-  userData: object;
+  userData: UserData;
   isAuthenticated: true | false
 }
 
-interface UserData {
-  email: string;
-  password: string;
+export interface UserData {
+  email?: string;
+  password?: string;
   firstname?: string;
   lastname?: string;
 }
 
+const userStorage = JSON.parse(localStorage.getItem('user') as string) as UserData
+
 const initialState: UserAuthState = {
   status: "idle",
-  userData: {},
+  userData:  userStorage ? userStorage : {},
   isAuthenticated: false || !!localStorage.getItem('user-token')
 };
 
@@ -49,10 +51,10 @@ export const authSlice = createSlice({
       })
       .addCase(loginAsync.fulfilled, (state, action) => {
         if(action.payload?.payload){
-          state.userData = action.payload.payload;
+          state.userData = action.payload.payload.user;
           localStorage.setItem('user-token', action.payload.payload.token)
+          localStorage.setItem('user', JSON.stringify(action.payload.payload.user))
         }
-        state.userData = {};
         state.isAuthenticated = true;
         state.status = "idle";
       })
@@ -61,10 +63,11 @@ export const authSlice = createSlice({
       })
       .addCase(registerAsync.fulfilled, (state, action) => {
         if(action.payload?.payload){
-          state.userData = action.payload.payload;
+          state.userData = action.payload.payload.user;
           localStorage.setItem('user-token', action.payload.payload.token)
+          localStorage.setItem('user', JSON.stringify(action.payload.payload.user))
         }
-        state.userData = {};
+      
         state.isAuthenticated = true;
         state.status = "idle";
       });
