@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
@@ -12,6 +12,9 @@ import AvatarImg from "../../assets/images/avatar2.png";
 import Avatar from "@material-ui/core/Avatar";
 import Footer from "../../components/footer/Footer";
 import { red, deepPurple } from "@material-ui/core/colors";
+import { useAppSelector } from "../../app/hooks";
+import { selectStateValues } from "../../app/auth-redux/authSlice";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -38,7 +41,14 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const ProfilePage: React.FC = () => {
+  const history = useHistory();
   const classes = useStyles();
+  const { userData = false } = useAppSelector(selectStateValues);
+  const logout = () => {
+    localStorage.clear();
+    history.push("/login");
+  };
+
   return (
     <React.Fragment>
       <CssBaseline />
@@ -81,7 +91,7 @@ const ProfilePage: React.FC = () => {
                     color="primary"
                     gutterBottom
                   >
-                    Email:
+                    Name:
                   </Typography>
                 </Box>
 
@@ -91,7 +101,7 @@ const ProfilePage: React.FC = () => {
                   color="textSecondary"
                   paragraph
                 >
-                  demo@email.com
+                  {userData && `${userData.firstname} ${userData.lastname}`}
                 </Typography>
               </div>
             </Grid>
@@ -104,7 +114,7 @@ const ProfilePage: React.FC = () => {
                     color="primary"
                     gutterBottom
                   >
-                    Department
+                    Email
                   </Typography>
                 </Box>
 
@@ -114,7 +124,7 @@ const ProfilePage: React.FC = () => {
                   color="textSecondary"
                   paragraph
                 >
-                  Hub
+                  {userData && userData.email}
                 </Typography>
               </div>
             </Grid>
@@ -138,6 +148,7 @@ const ProfilePage: React.FC = () => {
                 fullWidth
                 color="primary"
                 className={classes.logoutBtn}
+                onClick={() => logout()}
               >
                 Log Out
               </Button>
