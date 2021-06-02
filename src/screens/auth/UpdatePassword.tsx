@@ -8,23 +8,31 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { baseUrl } from "../../constants";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
+import queryString from 'query-string';
 
-const ResetPassword: React.FC = () => {
-  const [email, setEmail] = useState<string>("");
+const UpdatePassword: React.FC = () => {
+  const [password, setPassword] = useState<string>("");
+  const [cpassword, setCPassword] = useState<string>("");
   const [isLoading, setLoading] = useState<boolean>(false);
   const history = useHistory();
+  const {search} = useLocation();
+  const {token, email} = queryString.parse(search);
   const classes = useStyles();
 
-  const authUser = async () => {
-    if (email == "") {
-      alert("Email field is required!");
+
+
+  const resetPassword = async () => {
+    if (password !== cpassword) {
+      alert("Passwords do not match!");
       return;
     }
     setLoading(true);
     try {
-      const response = await axios.post(`${baseUrl}/reset-password`, {
-        email,
+      const response = await axios.post(`${baseUrl}/update-password`, {
+        password,
+        token,
+        email
       });
       console.log(response.data);
       setLoading(false);
@@ -33,6 +41,7 @@ const ResetPassword: React.FC = () => {
         history.push("/login");
       }
     } catch (error) {
+      console.log(error);
       setLoading(false);
       if (error.response.data.payload?.error) {
         alert(error.response.data.payload.message);
@@ -40,9 +49,14 @@ const ResetPassword: React.FC = () => {
     }
   };
 
-  const handleChangeEmail = (text: React.ChangeEvent<HTMLInputElement>) => {
-    const email = text.currentTarget.value;
-    setEmail(email);
+  const handleChangePassword = (text: React.ChangeEvent<HTMLInputElement>) => {
+    const password = text.currentTarget.value;
+    setPassword(password);
+  };
+
+  const handleChangeCP = (text: React.ChangeEvent<HTMLInputElement>) => {
+    const password = text.currentTarget.value;
+    setCPassword(password);
   };
 
   return (
@@ -56,7 +70,7 @@ const ResetPassword: React.FC = () => {
               align="center"
               className={classes.header}
             >
-              <Box color="primary.light">Reset Password</Box>
+              <Box color="primary.light">Update Password</Box>
             </Typography>
             <Box color="primary.light" className={classes.subHeader}>
               We will send your Password to your email
@@ -65,10 +79,19 @@ const ResetPassword: React.FC = () => {
             <div className={classes.formInputs}>
               <input
                 className={classes.formInput}
-                type="email"
-                name="email"
-                placeholder="Enter Email"
-                onChange={handleChangeEmail}
+                type="password"
+                name="password"
+                placeholder="Enter Password"
+                onChange={handleChangePassword}
+              />
+            </div>
+            <div className={classes.formInputs}>
+              <input
+                className={classes.formInput}
+                type="password"
+                name="confirm_password"
+                placeholder="Confirm Password"
+                onChange={handleChangeCP}
               />
             </div>
             {!isLoading && (
@@ -77,9 +100,9 @@ const ResetPassword: React.FC = () => {
                 color="primary"
                 className={classes.authBtn}
                 size={"large"}
-                onClick={authUser}
+                onClick={resetPassword}
               >
-                Send
+                Update
               </Button>
             )}
             {isLoading && (
@@ -263,4 +286,4 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default ResetPassword;
+export default UpdatePassword;
