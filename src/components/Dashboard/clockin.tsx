@@ -12,6 +12,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import { Link } from "react-router-dom";
 import axios from 'axios'
 import {baseUrl} from '../../constants/index'
+import { promises } from "fs";
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -47,18 +48,25 @@ const [loading,setLoading] = useState<boolean>(true)
   const [email, setEmail] = useState("");
 //   const [loading, setLoading] = useState(false);
 
-const data = {
-        "location":{
-            "long":4.25,
-            "lat":23.7
-        }   
-}
+
 useEffect(()=>{
 open? getData() : console.log('')
+
 },[open])
+const [geo,leo] = useState<{lat:null | number,long:null |number}>({
+    lat:null,
+    long:null
+})
+
+
 const getData = async()=>{
     const token = localStorage.getItem('user-token')
     try{
+        navigator.geolocation.getCurrentPosition(async({ coords })=>{
+        let data = {"location":{
+                        "long":coords.longitude,
+                        "lat":coords.latitude
+                    }}  
         const payload = await axios.post(`${baseUrl}clockin`,data, {
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -69,7 +77,8 @@ const getData = async()=>{
             setLoading(false)
             setclockIn(true)
         }
-
+    })
+    
     }catch(err){
         console.log(err)
     }

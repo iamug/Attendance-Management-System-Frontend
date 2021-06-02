@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {Link,useHistory,Redirect} from 'react-router-dom'
+import { Link, useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import { Toolbar, AppBar, Box } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
@@ -22,9 +22,9 @@ const Header: React.FC = () => {
   };
   const [popModal, setModal] = useState(false);
 
-  const history = useHistory()
+  const history = useHistory();
 
-  const location = history.location.pathname.split('/')[1]
+  const location = history.location.pathname.split("/")[1];
 
   const exitModal = (item: any) => {
     setModal(item);
@@ -39,18 +39,19 @@ const Header: React.FC = () => {
   return (
     <div className={classes.root}>
       {/* <AppBar position="static" className={classes.appBar}> */}
-        <Toolbar variant="dense" className={classes.toolBar}>
-          <IconButton
-            onClick={() => setModal(true)}
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="menu"
-          >
-            <img src={menuImg} alt="menu" className={classes.img} />
-          </IconButton>
-          <div style={{ display: "flex", flexDirection: "row" }}>
-            {/* <Typography variant="h3" className={classes.menuBox}>
+
+      <Toolbar variant="dense" className={classes.toolBar}>
+        <IconButton
+          onClick={() => setModal(true)}
+          edge="start"
+          className={classes.menuButton}
+          color="inherit"
+          aria-label="menu"
+        >
+          <img src={menuImg} alt="menu" className={classes.img} />
+        </IconButton>
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          {/* <Typography variant="h3" className={classes.menuBox}>
               <Link to={"/"} style={{ textDecoration: "none" }}>
                 <Box className={classes.navText}>Home</Box>
                 { location == 'home'?<div className={classes.smallDot}></div> : null }
@@ -131,7 +132,7 @@ const useStyles = makeStyles((theme) => ({
     },
     dropdown: {
       position: 'absolute',
-      fontSize:'11px',
+      fontSize:'12px',
       top: 29,
       right: 0,
       left: 0,
@@ -203,7 +204,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 10,
     margin: "0 auto",
     display: "none",
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up("sm")]: {
       display: "block",
     },
   },

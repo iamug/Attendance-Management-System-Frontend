@@ -18,8 +18,6 @@ const Dashboard:React.FC = () => {
 const [open, setOpen] = useState<boolean>(false);
 
 const {userData} = useAppSelector(selectStateValues)
-console.log(userData,'user personal data')
-
  const classes = useStyles()
 
     return (
@@ -27,7 +25,7 @@ console.log(userData,'user personal data')
             <img src={background} className={classes.bkimage} alt="circular"/>
             <Header />
             <Typography variant="h3" style={{padding:"0rem 4rem",marginBottom:'7rem'}}>
-                <Typography className={classes.name}>Welcome back, Paul</Typography>
+                <Typography className={classes.name}>Welcome back, {userData.firstname}</Typography>
                 <Box className={classes.buttons}>
                     <ClockInModal open={open} setOpen={setOpen}/>
                     <Button onClick={()=>setOpen(true)} className={classes.check} style={{backgroundColor:'#02C12C'}} variant="contained" color="secondary">
