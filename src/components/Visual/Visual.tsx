@@ -1,11 +1,14 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement,useEffect, useState } from 'react'
 import {Typography,Box,Button} from "@material-ui/core";
 import filter from '../../assets/images/filter.svg'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
+import {months} from '../../constants'
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import LineChart from './lineChart'
+import { LensTwoTone } from '@material-ui/icons';
+import moment from 'moment';
 
 
 
@@ -18,22 +21,70 @@ timing2:string
 const LineCharting:React.FC<properties> = ({instance,timing1,timing2}:properties):ReactElement => {
 
 
+//name: string | number;
 const classes = useStyles();
-const [state, setState] = React.useState<{ name: string | number; choosen: string }>({
-    name: '',
+const [state, setState] = React.useState<{ choosen:any }>({
+    // name: '',
     choosen: '',
 });
+const [month,setMonth] = useState<{monthName:string}>({monthName:moment().format('MMMM')})
+const [showmonth,setShowmonth] = useState<boolean>(false)
+
+const [val,setVal] =  React.useState<{ label:string[],data:number[] }>({
+  label:[],
+  data:[]
+})
+
+useEffect(()=>{
+  changeValue()
+},[state])
+
+const changeValue = () => {
+  if(state.choosen == 'weekly'){
+    setShowmonth(false)
+   return setVal({
+      label:['monday','tuesday','wednesday','thursday'],
+      data:[3,5,9,6]
+    })
+    }else if(state.choosen == 'monthly'){
+      setShowmonth(true)
+    return  setVal({
+        label:['week1','week2','week3','week4'],
+        data:[9.0,8.0,7.0,10.0]
+      })
+    }else if(state.choosen == 'yearly'){
+      setShowmonth(false)
+    return  setVal({
+        label:['january','febuary','march','april'],
+        data:[9,6,10,5]
+      })
+    }
+}
+
+const getMonth = () => {
+  let val:any[] = []
+  months.map((mth,index) => {
+   val.push(<option key={index * Math.random()} value={mth}>{mth}</option>)
+  })
+  console.log(month.monthName)
+  return val
+}
 
 
+const handleMonthly = (event: React.ChangeEvent<{ name?: string; value: any }>) => {
+  setMonth({
+    monthName:event.target.value
+  })
+
+}
 
 const handleChange = (event: React.ChangeEvent<{ name?: string; value: any }>) => {
-    const name = event.target.name as keyof typeof state;
+    // const name = event.target.name as keyof typeof state;
     setState({
-    ...state,
+    // ...state,
     choosen: event.target.value,
     });
 };
-const val = state.choosen
 return (
         <>
             <Box className={classes.stats}>
@@ -41,12 +92,12 @@ return (
                 <Box style={{display:'flex',alignItems:'center'}}>
                     <img src={filter} alt="filter" width="20px"  />
                     <Box>
-                        <FormControl variant="outlined" className={classes.formControl}>
-                            <InputLabel htmlFor="outlined-age-native-simple">{val=='weekly' || val=='monthly' || val=='yearly' ? null : 'weekly'}</InputLabel>
+                        <FormControl style={{marginBottom:'1rem'}} variant="outlined" className={classes.formControl}>
+                            {/* <InputLabel htmlFor="outlined-age-native-simple">{val=='weekly' || val=='monthly' || val=='yearly' ? null : 'weekly'}</InputLabel> */}
                             <Select
                             style={{padding:0}}
                             native
-                            value={state.choosen}
+                            value={state.choosen}         
                             onChange={handleChange}
                             label="Age"
                             inputProps={{
@@ -54,7 +105,7 @@ return (
                                 id: 'outlined-age-native-simple',
                             }}
                             >
-                            <option aria-label="None" value="" />
+                            {/* <option aria-label="None" value="" /> */}
                             <option value='weekly'>Weekly</option>
                             <option value='monthly'>Monthly</option>
                             <option value='yearly'>Yearly</option>
@@ -63,6 +114,26 @@ return (
                     </Box> 
                 </Box>
             </Box>
+            {
+              showmonth && 
+              <FormControl style={{paddingRight:'4rem',float:'right'}} variant="outlined" className={classes.formControl}>
+                            <Select
+                            style={{padding:0}}
+                            native
+                            value={month.monthName}         
+                            onChange={handleMonthly}
+                            label="Age"
+                            inputProps={{
+                                name: 'age',
+                                id: 'outlined-age-native-simple',
+                            }}
+                            >
+                              {
+                                  getMonth()
+                              }
+                            </Select>
+                        </FormControl>
+            }
             <Box className={classes.recenter}>
                 <Box style={{display:'flex',alignItems:'center'}} >
                     <div className={classes.smallDotBlue}></div>
@@ -75,7 +146,10 @@ return (
                     <span style={{marginLeft:'1rem'}} >{timing2}</span>
                 </Box>
             </Box>
-            <LineChart/>
+            <LineChart
+              labels={val.label}
+              data={val.data}
+            />
         </>
     )
 

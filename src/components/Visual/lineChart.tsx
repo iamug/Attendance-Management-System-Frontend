@@ -2,19 +2,24 @@ import React from 'react'
 import {Line} from 'react-chartjs-2'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
+interface lines {
+    labels:string[],
+    data:number[]
+}
 
-const LineChart:React.FC = () => {
+const LineChart:React.FC<lines> = ({labels,data}:lines) => {
     const classes = useStyles()
 
     return(
         <div className={classes.inner}>
             <Line
-            type="line"
+                type="line"
                 data={{
-                    labels:['Monday', 'Tuesday','Wednesday','Thursday','Friday'],
+                    // labels:['Monday', 'Tuesday','Wednesday','Thursday','Friday'],
+                    labels,
                     datasets: [{
-                        data: [9,11, 9, 10, 9.2,7],
-                        // backgroundColor: "red",
+                        // data: [9,11, 9, 10, 9.2,7],
+                        data,
                         borderColor: "#8B82A3",
                         pointStyle: 'circle',
                         pointBackgroundColor: function(context:any){

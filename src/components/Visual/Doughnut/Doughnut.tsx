@@ -11,26 +11,39 @@ import forth from '../../../assets/images/forth.svg'
 interface DoughnutInt {
     backgroundColor:string[],
     data:number[],
-    myArray:[{}],
+    myArray:[{}] | {}[],
     right?:string,
-    left?:string
+    left?:string,
+    sort:boolean
 }
-const DoughnutType:React.FC<DoughnutInt> = ({backgroundColor,data,myArray,right,left}:DoughnutInt):any => {
+const DoughnutType:React.FC<DoughnutInt> = ({backgroundColor,data,myArray,right,left,sort}:DoughnutInt):any => {
 
-
-   const  getValue = ():any =>{
+const getValue = ():any => {
+    const extra:any = []
+    const value:any = []
     let num = 0
-    const dataSet:any[] = []
-        myArray.map((item: any, index) => {
-            for(let keys in item){  
-                dataSet.push(<p style={{color:backgroundColor[num]}}>{keys} - {item[keys]}</p>)
+    myArray.map((item:any)=>{
+        for (let key in item){
+            value.push(item[key])
+            sort? value.sort() : value.push()
+            
+        }
+    })
+    value.map((first:any)=> {
+        myArray.map((sec:any,index:number)=> {
+            for(let key in sec){
+               if(first == sec[key]){
+                extra.push(<p key={index* Math.random()+ num} style={{color:backgroundColor[num]}}>{key} - {sec[key]}</p>)
                 num++
+            } else{
+                const v = ''
+               }    
             }
-        }) 
-        return dataSet
-    }
+        })
+    })
+     return extra
+}
   
-
     const classes = useStyles()
 
     return(
@@ -47,10 +60,10 @@ const DoughnutType:React.FC<DoughnutInt> = ({backgroundColor,data,myArray,right,
             
             <div style={{position:'relative'}}>
             <Doughnut
-            type='doughnut'
+                type='doughnut'
                 data={{
                     datasets: [{
-                      label: "Population (millions)",
+                    //   label: "Population (millions)",
                       backgroundColor,
                       data,
 
@@ -58,17 +71,17 @@ const DoughnutType:React.FC<DoughnutInt> = ({backgroundColor,data,myArray,right,
                     
                 }}
                 height={200}
-                width={300}
-                options={{
+                width={300} 
+              options={{
                     scales: {
                         xAxes: [{
                            gridLines: {
-                              display: false
+                            display: false
                            }
                         }],
                         yAxes: [{
                            gridLines: {
-                              display: false
+                            display: false
                            }
                         }]
                    },
@@ -76,10 +89,10 @@ const DoughnutType:React.FC<DoughnutInt> = ({backgroundColor,data,myArray,right,
                         display: false
                       },
                 }}
-            />
+             /> 
             <h3 style={{position:'absolute',top:'40%',left:'45%'}}>Weekly</h3>
         </div>
-        <div>{getValue()} </div>           
+        <div>{getValue()}  </div>           
     </div>
     </div>
     )
