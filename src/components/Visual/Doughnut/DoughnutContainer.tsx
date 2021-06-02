@@ -26,16 +26,16 @@ const getData = async()=>{
     data.map((act:any)=>{
         for(let key in act) {
             if(key == 'clockedIn'){
-                console.log(clockIn)
+                // console.log(clockIn)
                return clockIn.push(act['createdAt']) 
             }else if(key == 'clockedOut'){
-                console.log(act['createdAt'])
+                // console.log(act['createdAt'])
               return  clockOut.push(act['createdAt'])
             }         
     }
     })
     if(clockIn){
-        console.log(clockIn)
+        // console.log(clockIn)
         const mome =  moment(values[1]).week()
         const current =  moment().week()
         console.log(mome,current)

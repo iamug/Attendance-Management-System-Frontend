@@ -7,6 +7,8 @@ import LineCharting from '../Visual/Visual'
 import DoughtnutContainer from '../Visual/Doughnut/DoughnutContainer'
 import ClockInModal from './clockin'
 import Footer from '../footer/Footer'
+import {useAppSelector} from '../../app/hooks'
+import {selectStateValues} from '../../app/auth-redux/authSlice'
 
 
 
@@ -14,6 +16,9 @@ import Footer from '../footer/Footer'
 const Dashboard:React.FC = () => {
 
 const [open, setOpen] = useState<boolean>(false);
+
+const {userData} = useAppSelector(selectStateValues)
+console.log(userData,'user personal data')
 
  const classes = useStyles()
 

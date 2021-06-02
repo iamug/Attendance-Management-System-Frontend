@@ -48,7 +48,7 @@ export const authSlice = createSlice({
         state.status = "loading";
       })
       .addCase(loginAsync.fulfilled, (state, action) => {
-        if(action.payload?.payload){
+        if(action.payload?.payload.auth){
           state.userData = action.payload.payload;
           localStorage.setItem('user-token', action.payload.payload.token)
         }
@@ -60,7 +60,7 @@ export const authSlice = createSlice({
         state.status = "loading";
       })
       .addCase(registerAsync.fulfilled, (state, action) => {
-        if(action.payload?.payload){
+        if(action.payload?.payload.auth){
           state.userData = action.payload.payload;
           localStorage.setItem('user-token', action.payload.payload.token)
         }
