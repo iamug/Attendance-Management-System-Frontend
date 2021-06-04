@@ -2,27 +2,14 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState, AppThunk } from "../../app/store";
 import { getActivities } from "./activityAPI";
 
-export interface UserAuthState {
+export interface UserActivityData {
   status: "idle" | "loading" | "failed";
-  userData: UserData;
-  isAuthenticated: true | false;
+  activities: [object?];
 }
 
-export interface UserData {
-  email?: string;
-  password?: string;
-  firstname?: string;
-  lastname?: string;
-}
-
-const userStorage = JSON.parse(
-  localStorage.getItem("user") as string
-) as UserData;
-
-const initialState: UserAuthState = {
+const initialState: UserActivityData = {
   status: "idle",
-  userData: userStorage ? userStorage : {},
-  isAuthenticated: false || !!localStorage.getItem("user-token"),
+  activities: [],
 };
 
 export const getUserActivitiesAsync = createAsyncThunk(
@@ -33,8 +20,8 @@ export const getUserActivitiesAsync = createAsyncThunk(
   }
 );
 
-export const authSlice = createSlice({
-  name: "auth",
+export const activitySlice = createSlice({
+  name: "activites",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -43,23 +30,17 @@ export const authSlice = createSlice({
         state.status = "loading";
       })
       .addCase(getUserActivitiesAsync.fulfilled, (state, action) => {
-        if (action.payload) {
+        if (action.payload?.payload) {
           console.log({ action });
-          //state.userData = action.payload.payload.user;
-          //   localStorage.setItem("user-token", action.payload.payload.token);
-          //   localStorage.setItem(
-          //     "user",
-          //     JSON.stringify(action.payload.payload.user)
-          //   );
+          state.activities = action.payload.payload.data;
         }
-        state.isAuthenticated = true;
         state.status = "idle";
       });
   },
 });
 
-export const {} = authSlice.actions;
+export const {} = activitySlice.actions;
 
-export const selectStateValues = (state: RootState) => state.auth;
+export const selectStateValues = (state: RootState) => state.activities;
 
-export default authSlice.reducer;
+export default activitySlice.reducer;

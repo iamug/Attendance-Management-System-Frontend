@@ -8,7 +8,7 @@ const headers = {
 
 export async function getActivities(): Promise<any> {
   try {
-    const response = await axios.post(`${baseUrl}activities`, {}, { headers });
+    const response = await axios.get(`${baseUrl}activities`, { headers });
     return response.data;
   } catch (error) {
     return false;
