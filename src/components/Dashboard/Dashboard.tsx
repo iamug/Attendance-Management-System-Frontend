@@ -15,10 +15,21 @@ import {selectStateValues} from '../../app/auth-redux/authSlice'
 
 const Dashboard:React.FC = () => {
 
-const [open, setOpen] = useState<boolean>(false);
+const [openCi, setOpenCi] = useState<boolean>(false);
+const [openCo, setOpenCo] = useState<boolean>(false);
 
 const {userData} = useAppSelector(selectStateValues)
  const classes = useStyles()
+
+ const showModal = (name:string) => {
+     if(name == 'clockIn'){
+         setOpenCi(true)
+         setOpenCo(false)
+     }else if(name =='clockOut'){
+         setOpenCo(true)
+         setOpenCi(false)
+     }
+ }
 
     return (
         <>
@@ -27,11 +38,11 @@ const {userData} = useAppSelector(selectStateValues)
             <Typography variant="h3" style={{padding:"0rem 4rem",marginBottom:'7rem'}}>
                 <Typography className={classes.name}>Welcome back, {userData.firstname}</Typography>
                 <Box className={classes.buttons}>
-                    <ClockInModal open={open} setOpen={setOpen}/>
-                    <Button onClick={()=>setOpen(true)} className={classes.check} style={{backgroundColor:'#02C12C'}} variant="contained" color="secondary">
+                    <ClockInModal openCi={openCi} setOpenCi={setOpenCi} openCo={openCo} setOpenCo={setOpenCo} name={`${userData.firstname} ${userData.lastname}`}/>
+                    <Button onClick={()=>showModal('clockIn')} className={classes.check} style={{backgroundColor:'#02C12C'}} variant="contained" color="secondary">
                         Clock in
                     </Button> 
-                    <Button className={classes.check} style={{backgroundColor:'#C5C1D1',marginLeft:'10px'}} variant="contained" color="secondary">
+                    <Button onClick={()=>showModal('clockOut')}   className={classes.check} style={{backgroundColor:'#C5C1D1',marginLeft:'10px'}} variant="contained" color="secondary">
                         Clock out
                     </Button> 
                 </Box>     

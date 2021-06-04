@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState,useEffect} from 'react'
 import {Doughnut} from 'react-chartjs-2'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { LeakAddTwoTone } from '@material-ui/icons';
@@ -9,42 +9,46 @@ import forth from '../../../assets/images/forth.svg'
 
 
 interface DoughnutInt {
-    backgroundColor:string[],
-    data:number[],
-    myArray:[{}] | {}[],
-    right?:string,
-    left?:string,
+    data:number[];
+    right?:string;
+    left?:string;
+    backgroundColor:string [];
+    weekDay:{}[];
     sort:boolean
 }
-const DoughnutType:React.FC<DoughnutInt> = ({backgroundColor,data,myArray,right,left,sort}:DoughnutInt):any => {
-
-const getValue = ():any => {
+const DoughnutType:React.FC<DoughnutInt> = ({data,right,left,backgroundColor,weekDay,sort}:DoughnutInt):any => {
     const extra:any = []
-    const value:any = []
-    let num = 0
-    myArray.map((item:any)=>{
-        for (let key in item){
-            value.push(item[key])
-            sort? value.sort() : value.push()
-            
-        }
-    })
-    value.map((first:any)=> {
-        myArray.map((sec:any,index:number)=> {
-            for(let key in sec){
-               if(first == sec[key]){
-                extra.push(<p key={index* Math.random()+ num} style={{color:backgroundColor[num]}}>{key} - {sec[key]}</p>)
-                num++
-            } else{
-                const v = ''
-               }    
-            }
-        })
-    })
-     return extra
-}
-  
     const classes = useStyles()
+console.log(weekDay,'checking weekday')
+//  useEffect(()=>{
+//     displayWeek()
+//  },[weekDay.length > 0])
+
+ const displayWeek = () => {
+    // const value:any = []
+    // let num = 0
+    // weekDay.map((item:any)=>{
+    //     console.log('wooooooow')
+    //     for (let key in item){
+    //         value.push(item[key])
+    //         sort? value.sort() : value.push()
+            
+    //     }
+    // })
+    // value.map((first:any)=> {
+    //     weekDay.map((sec:any,index:number)=> {
+    //         for(let key in sec){
+    //            if(first == sec[key]){
+    //             extra.push(<p key={index* Math.random()+ num} style={{color:backgroundColor[num]}}>{key} - {sec[key]}</p>)
+    //             num++
+    //         } else{
+    //             const v = ''
+    //            }    
+    //         }
+    //     })
+    // })
+    //  return extra
+ }
 
     return(
         <div className={classes.extension}>
@@ -64,8 +68,8 @@ const getValue = ():any => {
                 data={{
                     datasets: [{
                     //   label: "Population (millions)",
-                      backgroundColor,
-                      data,
+                        backgroundColor,
+                        data,
 
                     }]
                     
@@ -92,7 +96,7 @@ const getValue = ():any => {
              /> 
             <h3 style={{position:'absolute',top:'40%',left:'45%'}}>Weekly</h3>
         </div>
-        <div>{getValue()}  </div>           
+        <div style={{zIndex:100,background:'red'}}>{weekDay? weekDay:'hello from here'} </div>           
     </div>
     </div>
     )

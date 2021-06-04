@@ -33,62 +33,92 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface ClockInModalProps {
-  open: boolean;
-  setOpen: any;
+  openCi: boolean;
+  setOpenCi: any;
+  name:string;
+  openCo:boolean;
+  setOpenCo:any
 }
 
 const ClockInModal: React.FC<ClockInModalProps> = ({
-  open,
-  setOpen,
+  openCi,
+  setOpenCi,
+  name,
+  openCo,
+  setOpenCo
 }: ClockInModalProps) => {
 
 const [clockIn,setclockIn] = useState(false)
 const [loading,setLoading] = useState<boolean>(true)
+const [mesage,setMessage] = useState<string>('')
   const classes = useStyles();
   const [email, setEmail] = useState("");
 //   const [loading, setLoading] = useState(false);
 
-
-useEffect(()=>{
-open? getData() : console.log('')
-
-},[open])
 const [geo,leo] = useState<{lat:null | number,long:null |number}>({
     lat:null,
     long:null
 })
 
 
-const getData = async()=>{
-    const token = localStorage.getItem('user-token')
-    try{
-        navigator.geolocation.getCurrentPosition(async({ coords })=>{
-        let data = {"location":{
-                        "long":coords.longitude,
-                        "lat":coords.latitude
-                    }}  
-        const payload = await axios.post(`${baseUrl}clockin`,data, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-            })
-            console.log(payload,'logging payload')
-        if(payload.status==200){
-            setLoading(false)
-            setclockIn(true)
-        }
-    })
-    
-    }catch(err){
-        console.log(err)
-    }
-
+const cancelModal = () => {
+  if(openCo){
+    setOpenCo(!openCo)
+  }else if(openCi){
+    setOpenCi(!openCi)
+  }
 }
+
+
+const getData = async()=>{
+  const token = localStorage.getItem('user-token')
+       navigator.geolocation.getCurrentPosition(async({ coords }):Promise<any>=>{
+       let data = {"location":{
+                       "long":coords.longitude,
+                       "lat":coords.latitude
+                   }}  
+
+       try{
+         const clock = openCi ? 'clockin' : 'clockout'
+      const {data:{payload}}  =  await axios.post(`${baseUrl}${clock}`,data ,{
+           headers: {
+               'Authorization': `Bearer ${token}`
+           }  
+           })
+           setMessage(payload)
+           setLoading(false)
+           setclockIn(true)
+       
+   }catch(err){
+    setclockIn(true)
+    setLoading(false)
+       if(err.message.split(' ')[5] == 417){
+         openCi ? setMessage(`Hi ${name}, you have already clocked in for today`) : setMessage(`Hi ${name}, you have already clocked out for today`)
+       }else{
+         setMessage(err)
+       }
+   }
+}
+)}
+
+
+
+
+
+
+useEffect(()=>{
+  if(openCi || openCo){
+    getData()
+  }else{
+    console.log('')
+  }
+  
+  },[openCi || openCo])
 
   return (
     <React.Fragment>
       <Modal
-        open={open}
+        open={openCi || openCo}
         className={classes.modal}
         // onClose={() => setOpen(false)}
         closeAfterTransition
@@ -96,15 +126,15 @@ const getData = async()=>{
         BackdropProps={{ timeout: 500 }}
       >
           
-        <Slide in={open}>
+        <Slide in={openCi || openCo}>
           <div className={classes.paper}>
             <Box textAlign="right" color="primary.main" mb={6}>
               <i
                 className="fas fa-1x fa-times"
-                onClick={() => setOpen(!open)}
+                onClick={() => cancelModal()}
               />
                 {
-                clockIn?<Box style={{textAlign:'center',marginTop:'1rem'}} > sucessfully clocked In </Box> : null
+                clockIn?<Box style={{textAlign:'center',marginTop:'1rem'}} > {mesage} </Box> : null
                 }
             </Box>
            
