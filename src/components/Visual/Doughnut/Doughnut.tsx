@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState,useEffect} from 'react'
 import {Doughnut} from 'react-chartjs-2'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { LeakAddTwoTone } from '@material-ui/icons';
@@ -9,29 +9,46 @@ import forth from '../../../assets/images/forth.svg'
 
 
 interface DoughnutInt {
-    backgroundColor:string[],
-    data:number[],
-    myArray:[{}],
-    right?:string,
-    left?:string
+    data:number[];
+    right?:string;
+    left?:string;
+    backgroundColor:string [];
+    weekDay:{}[];
+    sort:boolean
 }
-const DoughnutType:React.FC<DoughnutInt> = ({backgroundColor,data,myArray,right,left}:DoughnutInt):any => {
-
-
-   const  getValue = ():any =>{
-    let num = 0
-    const dataSet:any[] = []
-        myArray.map((item: any, index) => {
-            for(let keys in item){  
-                dataSet.push(<p style={{color:backgroundColor[num]}}>{keys} - {item[keys]}</p>)
-                num++
-            }
-        }) 
-        return dataSet
-    }
-  
-
+const DoughnutType:React.FC<DoughnutInt> = ({data,right,left,backgroundColor,weekDay,sort}:DoughnutInt):any => {
+    const extra:any = []
     const classes = useStyles()
+console.log(weekDay,'checking weekday')
+//  useEffect(()=>{
+//     displayWeek()
+//  },[weekDay.length > 0])
+
+ const displayWeek = () => {
+    // const value:any = []
+    // let num = 0
+    // weekDay.map((item:any)=>{
+    //     console.log('wooooooow')
+    //     for (let key in item){
+    //         value.push(item[key])
+    //         sort? value.sort() : value.push()
+            
+    //     }
+    // })
+    // value.map((first:any)=> {
+    //     weekDay.map((sec:any,index:number)=> {
+    //         for(let key in sec){
+    //            if(first == sec[key]){
+    //             extra.push(<p key={index* Math.random()+ num} style={{color:backgroundColor[num]}}>{key} - {sec[key]}</p>)
+    //             num++
+    //         } else{
+    //             const v = ''
+    //            }    
+    //         }
+    //     })
+    // })
+    //  return extra
+ }
 
     return(
         <div className={classes.extension}>
@@ -47,28 +64,28 @@ const DoughnutType:React.FC<DoughnutInt> = ({backgroundColor,data,myArray,right,
             
             <div style={{position:'relative'}}>
             <Doughnut
-            type='doughnut'
+                type='doughnut'
                 data={{
                     datasets: [{
-                      label: "Population (millions)",
-                      backgroundColor,
-                      data,
+                    //   label: "Population (millions)",
+                        backgroundColor,
+                        data,
 
                     }]
                     
                 }}
                 height={200}
-                width={300}
-                options={{
+                width={300} 
+              options={{
                     scales: {
                         xAxes: [{
                            gridLines: {
-                              display: false
+                            display: false
                            }
                         }],
                         yAxes: [{
                            gridLines: {
-                              display: false
+                            display: false
                            }
                         }]
                    },
@@ -76,10 +93,10 @@ const DoughnutType:React.FC<DoughnutInt> = ({backgroundColor,data,myArray,right,
                         display: false
                       },
                 }}
-            />
+             /> 
             <h3 style={{position:'absolute',top:'40%',left:'45%'}}>Weekly</h3>
         </div>
-        <div>{getValue()} </div>           
+        <div style={{zIndex:100,background:'red'}}>{weekDay? weekDay:'hello from here'} </div>           
     </div>
     </div>
     )
