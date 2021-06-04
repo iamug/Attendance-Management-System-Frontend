@@ -21,6 +21,7 @@ import Drawer from "@material-ui/core/Drawer";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import {
   getUserActivitiesAsync,
+  filterActivitiesAsync,
   selectStateValues,
 } from "../../app/activity-redux/activitySlice";
 
@@ -94,6 +95,15 @@ export default function ActivityHistory() {
     }
     fetchActivities();
   }, []);
+
+  useEffect(() => {
+    async function filter() {
+      const result = await dispatch(filterActivitiesAsync(dateRange));
+      console.log("result", result);
+    }
+    filter();
+    return () => {};
+  }, [dateRange]);
 
   useEffect(() => {
     let data = sortActivitiesByDate(groupActivitiesByDate(activities));
