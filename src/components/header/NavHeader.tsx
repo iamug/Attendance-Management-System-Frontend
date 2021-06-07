@@ -6,8 +6,20 @@ import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import menuImg from "../../assets/images/menu.png";
 import NavOverlay from "../../components/header/NavOverlay";
+import dropdown from '../../assets/images/dropdown.svg'
+// import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 const Header: React.FC = () => {
+  const [open, setOpen] = React.useState(false);
+
+  const handleClick = () => {
+    setOpen((prev) => !prev);
+  };
+
+  const handleClickAway = () => {
+    setOpen(false);
+  };
   const [popModal, setModal] = useState(false);
 
   const history = useHistory();
@@ -17,6 +29,12 @@ const Header: React.FC = () => {
   const exitModal = (item: any) => {
     setModal(item);
   };
+
+  const logoutBotton = ():any => {
+    // localStorage.removeItem('user-token')
+    localStorage.clear()
+    history.push('/')
+  }
 
   const classes = useStyles();
   return (
@@ -40,30 +58,46 @@ const Header: React.FC = () => {
                 { location == 'home'?<div className={classes.smallDot}></div> : null }
               </Link>
             </Typography> */}
-          <Typography variant="h3" className={classes.menuBox}>
-            <Link to={"/dashboard"} style={{ textDecoration: "none" }}>
-              <Box className={classes.navText}>Dashboard</Box>
-              {location == "dashboard" ? (
-                <div className={classes.smallDot}></div>
-              ) : null}
-            </Link>
-          </Typography>
-          <Typography variant="h3" className={classes.menuBox}>
-            <Link to={"/activity"} style={{ textDecoration: "none" }}>
-              <Box className={classes.navText}>Activities</Box>
-              {location == "activity" ? (
-                <div className={classes.smallDot}></div>
-              ) : null}
-            </Link>
-          </Typography>
-        </div>
-
-        <Link to="/profile">
-          <div className={classes.avatar}></div>
-        </Link>
-      </Toolbar>
-
-      <hr style={{ width: "90%", transform: "translateY(-8px)" }} />
+            <Typography variant="h3" className={classes.menuBox}>
+              <Link to={"/dashboard"} style={{ textDecoration: "none" }}>
+                <Box className={classes.navText}>Dashboard</Box> 
+                {location == 'dashboard'? <div className={classes.smallDot}></div> : null }   
+              </Link>
+            </Typography>
+            <Typography variant="h3" className={classes.menuBox}>
+              <Link to={"/activity"} style={{ textDecoration: "none" }}>
+                <Box className={classes.navText}>Activities</Box>
+                {location == 'activity'? <div className={classes.smallDot}></div> : null }         
+              </Link>
+            </Typography>
+          </div>
+          <div style={{display:'flex',alignItems:'center'}}>
+            <div className={classes.avatar} style={{marginRight:'10px'}}></div>
+            <ClickAwayListener
+              mouseEvent="onMouseDown"
+              touchEvent="onTouchStart"
+              onClickAway={handleClickAway}
+            >
+            <div className={classes.root2}>
+            <button type="button" style={{border:'none'}} onClick={handleClick}>
+              <img src={dropdown} width="15px"/>
+            </button>
+            {open ? (
+              <div className={classes.dropdown}>
+                <Link to={"/profile"} style={{ textDecoration: "none" }}>
+                  <Box >Profile</Box> 
+                </Link>
+                <hr/>
+                <Box onClick={logoutBotton} style={{ textDecoration: "none",cursor:'pointer' }}>
+                  <Box >Logout</Box> 
+                </Box>
+              </div>
+            ) : null}
+            </div>
+            </ClickAwayListener>
+          </div>
+        </Toolbar>
+        <hr style={{width:'95%',transform:'translateY(-8px)'}} />
       {/* </AppBar> */}
       <NavOverlay showModal={popModal} exitModal={exitModal} />
     </div>
@@ -94,6 +128,24 @@ const styles = {
 };
 
 const useStyles = makeStyles((theme) => ({
+     root2: {
+      position: 'relative',
+    },
+    dropdown: {
+      position: 'absolute',
+      fontSize:'12px',
+      top: 29,
+      right: 0,
+      left: 0,
+      zIndex: 1,
+      border: '1px solid',
+      borderRadius:'5px',
+      padding: theme.spacing(1),
+      backgroundColor: theme.palette.background.paper,
+      width:'80px',
+      marginLeft:'-22px',
+      objectFit:'cover',
+    },
   paper: {
     position: "absolute",
     width: 400,
@@ -104,10 +156,10 @@ const useStyles = makeStyles((theme) => ({
   },
   root: {
     flexGrow: 1,
-    padding: 50,
-    paddingTop: 0,
-    paddingBottom: 0,
-    marginBottom: 0,
+    padding:30,
+    paddingTop:0,
+    paddingBottom:0,
+    marginBottom:0,
     // width: '100%'
   },
   menuButton: {
