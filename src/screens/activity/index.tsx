@@ -18,39 +18,17 @@ import Paper from "@material-ui/core/Paper";
 import { format } from "date-fns";
 import { DateRangePicker, DateRange } from "materialui-daterange-picker";
 import Drawer from "@material-ui/core/Drawer";
-import { rows } from "./data";
-
-const StyledTableCell = withStyles((theme: Theme) => ({
-  head: {
-    backgroundColor: theme.palette.common.white,
-    color: theme.palette.primary.main,
-  },
-  body: {
-    fontSize: 14,
-  },
-}))(TableCell);
-
-const StyledTableRow = withStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      "&:nth-of-type(even)": {
-        backgroundColor: theme.palette.action.hover,
-      },
-    },
-  })
-)(TableRow);
-
-const useStyles = makeStyles({
-  table: {},
-  datePickerWrapper: {
-    position: "absolute",
-  },
-  drawer: {
-    width: "70vw",
-  },
-});
+import { useAppSelector, useAppDispatch } from "../../app/hooks";
+import {
+  getUserActivitiesAsync,
+  filterActivitiesAsync,
+  selectStateValues,
+} from "../../app/activity-redux/activitySlice";
 
 export default function ActivityHistory() {
+  const dispatch = useAppDispatch();
+  const { activities } = useAppSelector(selectStateValues);
+  const [rowData, setRowData] = useState<[object?]>([]);
   const [openDrawer, setOpenDrawer] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -62,10 +40,7 @@ export default function ActivityHistory() {
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
     newPage: number
-  ) => {
-    console.log("changepage", newPage);
-    setPage(newPage);
-  };
+  ) => setPage(newPage);
 
   const checkDatePickerValue = () => {
     if (dateRange.startDate && dateRange.endDate) return true;
@@ -86,8 +61,57 @@ export default function ActivityHistory() {
     setPage(0);
   };
 
+  const getUserActivities = async () => {
+    const result = await dispatch(getUserActivitiesAsync());
+    return result;
+  };
+
+  const groupActivitiesByDate = (data: [object?]) => {
+    let grouped: [object?] = [];
+    let result = data.reduce((r: any, a: any) => {
+      let day = new Date(a.createdAt).toDateString();
+      r[day] = r[day] || [];
+      r[day].push(a);
+      return r;
+    }, Object.create(null));
+    for (const key in result) {
+      let object: any = { date: new Date(key) };
+      let clockedIn = result[key].find((x: any) => x.clockedIn === true);
+      let clockedOut = result[key].find((x: any) => x.clockedOut === true);
+      clockedIn && (object.clockedIn = clockedIn.createdAt);
+      clockedOut && (object.clockedOut = clockedOut.createdAt);
+      grouped.push(object);
+    }
+    return grouped;
+  };
+
+  const sortActivitiesByDate = (data: [object?]) => {
+    return data.sort((a: any, b: any) => b.date - a.date);
+  };
+
+  useEffect(() => {
+    async function fetchActivities() {
+      await getUserActivities();
+    }
+    fetchActivities();
+  }, []);
+
+  useEffect(() => {
+    async function filter() {
+      if (dateRange.startDate) await dispatch(filterActivitiesAsync(dateRange));
+    }
+    filter();
+    return () => {};
+  }, [dateRange]);
+
+  useEffect(() => {
+    let data = sortActivitiesByDate(groupActivitiesByDate(activities));
+    setRowData(data);
+    return () => {};
+  }, [activities]);
+
   return (
-    <React.Fragment>
+    <>
       <Header />
       <main style={{ minHeight: "80vh" }}>
         <Container style={{ margin: "60px auto" }}>
@@ -157,24 +181,26 @@ export default function ActivityHistory() {
               </TableHead>
               <TableBody>
                 {(rowsPerPage > 0
-                  ? rows.slice(
+                  ? rowData.slice(
                       page * rowsPerPage,
                       page * rowsPerPage + rowsPerPage
                     )
-                  : rows
-                ).map((row, index) => (
+                  : rowData
+                ).map((row: any, index) => (
                   <StyledTableRow key={index}>
                     <StyledTableCell component="th" scope="row">
-                      {format(row.date, "EEEE")}
+                      {format(new Date(row.date), "EEEE")}
                     </StyledTableCell>
                     <StyledTableCell align="center">
-                      {format(row.date, "dd-MMM-yyyy")}
+                      {format(new Date(row.date), "dd-MMM-yyyy")}
                     </StyledTableCell>
                     <StyledTableCell align="right">
-                      {format(row.clockin, "hh:mm aa")}
+                      {row.clockedIn &&
+                        format(new Date(row.clockedIn), "hh:mm aa")}
                     </StyledTableCell>
                     <StyledTableCell align="right">
-                      {format(row.clockout, "hh:mm aa")}
+                      {row.clockedOut &&
+                        format(new Date(row.clockedOut), "hh:mm aa")}
                     </StyledTableCell>
                   </StyledTableRow>
                 ))}
@@ -189,7 +215,7 @@ export default function ActivityHistory() {
                       { label: "All", value: -1 },
                     ]}
                     colSpan={3}
-                    count={rows.length}
+                    count={rowData.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     SelectProps={{
@@ -216,6 +242,36 @@ export default function ActivityHistory() {
       >
         <h2>hello world</h2>
       </Drawer>
-    </React.Fragment>
+    </>
   );
 }
+
+const StyledTableCell = withStyles((theme: Theme) => ({
+  head: {
+    backgroundColor: theme.palette.common.white,
+    color: theme.palette.primary.main,
+  },
+  body: {
+    fontSize: 14,
+  },
+}))(TableCell);
+
+const StyledTableRow = withStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      "&:nth-of-type(even)": {
+        backgroundColor: theme.palette.action.hover,
+      },
+    },
+  })
+)(TableRow);
+
+const useStyles = makeStyles({
+  table: {},
+  datePickerWrapper: {
+    position: "absolute",
+  },
+  drawer: {
+    width: "70vw",
+  },
+});
