@@ -98,8 +98,7 @@ export default function ActivityHistory() {
 
   useEffect(() => {
     async function filter() {
-      const result = await dispatch(filterActivitiesAsync(dateRange));
-      console.log("result", result);
+      if (dateRange.startDate) await dispatch(filterActivitiesAsync(dateRange));
     }
     filter();
     return () => {};
