@@ -43,23 +43,24 @@ const LineChart:React.FC<lines> = ({labels,data,title}:lines) => {
                 height={150}
                 width={300}
                 options={{
-                    scales: {
-                        xAxes: [{
-                           gridLines: {
-                              display: false
-                           }
-                        }],
-                        yAxes: [{
-                           gridLines: {
-                              display: false
-                           }
-                        }]
-                   },
                    plugins: {
+                       scales: {
+                    xAxes: [{
+                       gridLines: {
+                          display: false
+                       }
+                    }],
+                    yAxes: [{
+                       gridLines: {
+                          display: false
+                       }
+                    }]
+               },
                     title: {
                         display: true,
                         text: title
                     },
+                    
                     legend: {
                         display: false
                       },

@@ -51,7 +51,7 @@ const DoughnutContainer = () => {
           //Here is all our clock in Data
           if(clockIn){
             clockIn.map(clin=> {
-                const current =  (moment().week())-1
+                const current =  (moment().week())
                 // console.log('current',':',current,'fetch',':',moment(clin).week())
             if(moment(clin).week() == current){
                     const weekName = moment(clin).toString().split(' ')[0]
