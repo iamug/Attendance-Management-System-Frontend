@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
@@ -11,10 +11,9 @@ import TextField from "@material-ui/core/TextField";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Alert from "@material-ui/lab/Alert";
 import Snackbar from "@material-ui/core/Snackbar";
-import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import { Link } from "react-router-dom";
 import { clockinUserHomepage } from "../../app/clockInAPI";
-import { ClockInModalProps, position } from "../../models/clockIn";
+import { ClockInModalProps } from "../../models/clockIn";
 
 const ClockInModal: React.FC<ClockInModalProps> = ({
   open,
@@ -31,26 +30,32 @@ const ClockInModal: React.FC<ClockInModalProps> = ({
   };
 
   const clockIn = async () => {
-    if (openSuccess) {
-      console.log("already clocked in ");
-      return;
-    }
     try {
       setLoading(true);
       if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(async ({ coords }) => {
-          let location = { lat: coords.latitude, long: coords.longitude };
-          let response = await clockinUserHomepage(email, location);
-          if (response.status !== 200) handleFailure(response.data.payload);
-          if (response.status == 200) handleSuccess(response.data.payload);
-        });
-      } else {
-        console.log(" location failed");
+        navigator.geolocation.getCurrentPosition(
+          async ({ coords }) => {
+            let location = { lat: coords.latitude, long: coords.longitude };
+            let res = await clockinUserHomepage(email, location);
+            if (res?.data && res?.status === 200)
+              return handleSuccess(res.data.payload);
+            if (res?.data && res?.status !== 200)
+              return handleFailure(res.data.payload);
+            else handleFailure("Error. Check internet connection.");
+          },
+          (error) => handleFailure("Error. " + error?.message)
+        );
       }
     } catch (error) {
-      console.log({ error });
-      //handleFailure(error.);
+      console.log("error", { error });
+      handleFailure("Error. Check internet connection.");
     }
+  };
+
+  const handleSubmitForm = (e?: React.FormEvent<HTMLFormElement>) => {
+    e && e.preventDefault();
+    clockIn();
+    return false;
   };
 
   const handleSuccess = (msg: string) => {
@@ -67,12 +72,21 @@ const ClockInModal: React.FC<ClockInModalProps> = ({
     return false;
   };
 
+  const handleCloseModal = () => {
+    setLoading(false);
+    setEmail("");
+    setOpenSuccess(false);
+    setOpenFailure(false);
+    setOpen(false);
+    return false;
+  };
+
   return (
     <React.Fragment>
       <Modal
         open={open}
         className={classes.modal}
-        onClose={() => setOpen(false)}
+        onClose={() => handleCloseModal()}
         closeAfterTransition
         BackdropComponent={Backdrop}
         BackdropProps={{ timeout: 500 }}
@@ -82,7 +96,7 @@ const ClockInModal: React.FC<ClockInModalProps> = ({
             <Box textAlign="right" color="primary.main" mb={6}>
               <i
                 className="fas fa-1x fa-times"
-                onClick={() => setOpen(!open)}
+                onClick={() => handleCloseModal()}
               />
             </Box>
 
@@ -130,7 +144,11 @@ const ClockInModal: React.FC<ClockInModalProps> = ({
 
             {!loading && (
               <>
-                <form noValidate autoComplete="off">
+                <form
+                  noValidate
+                  onSubmit={(e) => handleSubmitForm(e)}
+                  autoComplete="off"
+                >
                   <Grid
                     container
                     spacing={2}
@@ -154,7 +172,7 @@ const ClockInModal: React.FC<ClockInModalProps> = ({
                         variant="contained"
                         size="medium"
                         color="secondary"
-                        onClick={() => clockIn()}
+                        onClick={() => handleSubmitForm()}
                       >
                         Clock In
                       </Button>

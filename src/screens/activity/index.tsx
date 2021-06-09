@@ -16,6 +16,9 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { format } from "date-fns";
+import DateFnsUtils from "@date-io/date-fns";
+import { MuiPickersUtilsProvider } from "@material-ui/pickers";
+import { KeyboardDatePicker } from "@material-ui/pickers";
 import { DateRangePicker, DateRange } from "materialui-daterange-picker";
 import Drawer from "@material-ui/core/Drawer";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
@@ -24,16 +27,25 @@ import {
   filterActivitiesAsync,
   selectStateValues,
 } from "../../app/activity-redux/activitySlice";
+import { selectStateValues as selectUserValues } from "../../app/auth-redux/authSlice";
+import { CSVLink } from "react-csv";
 
 export default function ActivityHistory() {
   const dispatch = useAppDispatch();
   const { activities } = useAppSelector(selectStateValues);
   const [rowData, setRowData] = useState<[object?]>([]);
+  const [startDate, setStartDate] = useState<Date | undefined>();
+  const [endDate, setEndDate] = useState<Date | undefined>();
   const [openDrawer, setOpenDrawer] = useState(false);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [open, setOpen] = React.useState(false);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [open, setOpen] = useState(false);
   const [dateRange, setDateRange] = useState<DateRange>({});
+  const [csvReport, setCsvReport] = useState({
+    data: [],
+    filename: "Report.csv",
+  });
+  const { userData } = useAppSelector(selectUserValues);
   const toggle = () => setOpen(!open);
   const classes = useStyles();
 
@@ -89,6 +101,33 @@ export default function ActivityHistory() {
     return data.sort((a: any, b: any) => b.date - a.date);
   };
 
+  const handleFilter = () => {
+    let dateRange: DateRange = { startDate, endDate };
+    setDateRange(dateRange);
+    setOpenDrawer(false);
+  };
+
+  const getExportFileName = () => {
+    return `Reports-${
+      userData && userData.firstname + " " + userData.lastname
+    }-${new Date().toDateString()}-export.csv`;
+  };
+
+  const downloadReport = (event: any, done: (arg: any) => void) => {
+    let exportData = rowData.map((e: any) => {
+      let obj: any = {};
+      obj.Day = format(new Date(e.date), "EEEE");
+      obj.Date = format(new Date(e.date), "dd-MMM-yyyy");
+      obj.ClockedIn = e.clockedIn && format(new Date(e.clockedIn), "hh:mm aa");
+      obj.ClockedOut =
+        e.clockedOut && format(new Date(e.clockedOut), "hh:mm aa");
+      return obj;
+    });
+    const objReport = { filename: getExportFileName(), data: exportData };
+    setCsvReport(objReport as any);
+    done(true);
+  };
+
   useEffect(() => {
     async function fetchActivities() {
       await getUserActivities();
@@ -114,7 +153,7 @@ export default function ActivityHistory() {
     <>
       <Header />
       <main style={{ minHeight: "80vh" }}>
-        <Container style={{ margin: "60px auto" }}>
+        <Container style={{ margin: "30px auto" }}>
           <Grid
             container
             spacing={5}
@@ -165,7 +204,14 @@ export default function ActivityHistory() {
                 fullWidth
                 color="primary"
               >
-                Export CSV
+                <CSVLink
+                  {...csvReport}
+                  asyncOnClick={true}
+                  onClick={downloadReport}
+                  className="MuiButton-containedPrimary MuiButtonBase-root"
+                >
+                  Export CSV
+                </CSVLink>
               </Button>
             </Grid>
           </Grid>
@@ -240,7 +286,56 @@ export default function ActivityHistory() {
           paper: classes.drawer,
         }}
       >
-        <h2>hello world</h2>
+        <Box>
+          <Grid
+            container
+            spacing={5}
+            direction="row"
+            justify="space-between"
+            style={{ marginBottom: "10px", padding: "3em 1em" }}
+          >
+            <Grid item container alignItems="flex-end" xs={12} md={12}>
+              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <KeyboardDatePicker
+                  margin="normal"
+                  label="Start Date"
+                  format="MM/dd/yyyy"
+                  value={startDate}
+                  required
+                  onChange={(date) => setStartDate(date as Date | undefined)}
+                  KeyboardButtonProps={{
+                    "aria-label": "change date",
+                  }}
+                />
+              </MuiPickersUtilsProvider>
+            </Grid>
+            <Grid item container alignItems="flex-end" xs={12} md={12}>
+              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <KeyboardDatePicker
+                  margin="normal"
+                  label="End date"
+                  format="MM/dd/yyyy"
+                  value={endDate}
+                  onChange={(date) => setEndDate(date as Date | undefined)}
+                  KeyboardButtonProps={{
+                    "aria-label": "change date",
+                  }}
+                />
+              </MuiPickersUtilsProvider>
+            </Grid>
+            <Grid item container alignItems="flex-start" xs={12} md={12}>
+              <Button
+                variant="contained"
+                size="large"
+                fullWidth
+                color="primary"
+                onClick={() => handleFilter()}
+              >
+                Filter
+              </Button>
+            </Grid>
+          </Grid>
+        </Box>
       </Drawer>
     </>
   );

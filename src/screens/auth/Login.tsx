@@ -7,6 +7,7 @@ import { Checkbox, Box, Typography, Button } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { loginAsync, selectStateValues } from "../../app/auth-redux/authSlice";
+import { getUserActivitiesAsync } from "../../app/activity-redux/activitySlice";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { useHistory } from "react-router-dom";
 
@@ -45,6 +46,7 @@ const Login: React.FC = () => {
     console.log(result);
     if (result.payload.payload.auth) {
       history.push("/dashboard");
+      dispatch(getUserActivitiesAsync());
     } else {
       setErrorMessage("Failed Authentication");
     }
