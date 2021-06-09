@@ -1,13 +1,13 @@
 import axios from "axios";
 import { baseUrl } from "../../constants/index";
 
-const headers = {
-  "Content-Type": "application/json",
-  Authorization: `Bearer ${localStorage.getItem("user-token")}`,
-};
-
 export async function getActivities(): Promise<any> {
   try {
+    let token = localStorage.getItem("user-token");
+    let headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    };
     const response = await axios.get(`${baseUrl}activities`, { headers });
     return response.data;
   } catch (error) {
@@ -20,6 +20,11 @@ export async function filterActivities(
   endDate: Date
 ): Promise<any> {
   try {
+    let token = localStorage.getItem("user-token");
+    let headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    };
     let body: any = { startDate, endDate };
     const response = await axios.post(`${baseUrl}activities/filter`, body, {
       headers,

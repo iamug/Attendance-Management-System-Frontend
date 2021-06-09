@@ -1,5 +1,5 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState, AppThunk } from "../../app/store";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { RootState } from "../../app/store";
 import { getActivities, filterActivities } from "./activityAPI";
 
 export interface UserActivityData {
@@ -39,7 +39,6 @@ export const activitySlice = createSlice({
       })
       .addCase(getUserActivitiesAsync.fulfilled, (state, action) => {
         if (action.payload?.payload) {
-          console.log({ action });
           state.activities = action.payload.payload.data;
         }
         state.status = "idle";
@@ -49,7 +48,6 @@ export const activitySlice = createSlice({
       })
       .addCase(filterActivitiesAsync.fulfilled, (state, action) => {
         if (action.payload?.payload) {
-          console.log({ action });
           state.activities = action.payload.payload.data;
         }
         state.status = "idle";
