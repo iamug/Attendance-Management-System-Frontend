@@ -31,7 +31,8 @@ const Header: React.FC = () => {
   };
 
   const logoutBotton = ():any => {
-    localStorage.removeItem('user-token')
+    // localStorage.removeItem('user-token')
+    localStorage.clear()
     history.push('/')
   }
 

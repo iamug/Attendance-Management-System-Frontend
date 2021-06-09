@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
@@ -46,10 +46,9 @@ const ClockInModal: React.FC<ClockInModalProps> = ({
   openCo,
   setOpenCo,
 }: ClockInModalProps) => {
-
-const [clockIn,setclockIn] = useState(false)
-const [loading,setLoading] = useState<boolean>(true)
-const [mesage,setMessage] = useState<string>('')
+  const [clockIn, setclockIn] = useState(false);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [mesage, setMessage] = useState<string>("");
   const classes = useStyles();
   const [email, setEmail] = useState("");
 //   const [loading, setLoading] = useState(false);
@@ -120,19 +119,18 @@ useEffect(()=>{
         BackdropComponent={Backdrop}
         BackdropProps={{ timeout: 500 }}
       >
-          
         <Slide in={openCi || openCo}>
           <div className={classes.paper}>
             <Box textAlign="right" color="primary.main" mb={6}>
-              <i
-                className="fas fa-1x fa-times"
-                onClick={() => cancelModal()}
-              />
-                {
-                clockIn?<Box style={{textAlign:'center',marginTop:'1rem'}} > {mesage} </Box> : null
-                }
+              <i className="fas fa-1x fa-times" onClick={() => cancelModal()} />
+              {clockIn ? (
+                <Box style={{ textAlign: "center", marginTop: "1rem" }}>
+                  {" "}
+                  {mesage}{" "}
+                </Box>
+              ) : null}
             </Box>
-           
+
             {loading && (
               <Box mt={8} mb={8}>
                 <Grid
@@ -157,7 +155,7 @@ useEffect(()=>{
                   </Grid>
                 </Grid>
               </Box>
-             )} 
+            )}
           </div>
         </Slide>
       </Modal>

@@ -12,6 +12,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { useAppSelector } from "./app/hooks";
 import { selectStateValues } from "./app/auth-redux/authSlice";
+import UpdatePassword from "./screens/auth/UpdatePassword";
 
 const theme = createMuiTheme({
   palette: {
@@ -47,6 +48,7 @@ function App() {
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
           <Route path="/reset-password" component={ResetPassword} />
+          <Route path="/update-password" component={UpdatePassword} />
           <ProtectedRoute
             exact
             path="/profile"
