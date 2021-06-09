@@ -11,6 +11,7 @@ import {
   selectStateValues,
 } from "../../app/auth-redux/authSlice";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import { useHistory } from "react-router-dom";
 
 const Register: React.FC = () => {
   const auth = useAppSelector(selectStateValues);
@@ -22,6 +23,8 @@ const Register: React.FC = () => {
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const history = useHistory();
+  const [message, setErrorMessage] = useState<string>("");
 
   const handleChangeEmail = (text: React.ChangeEvent<HTMLInputElement>) => {
     const email = text.currentTarget.value;
@@ -66,6 +69,11 @@ const Register: React.FC = () => {
     );
     console.log("result");
     console.log(result);
+    if (result.payload.payload.auth) {
+      history.push("/login");
+    } else {
+      setErrorMessage("Failed Authentication");
+    }
   };
 
   return (
@@ -81,6 +89,9 @@ const Register: React.FC = () => {
             >
               <Box color="primary.light">Register</Box>
             </Typography>
+            <div className={classes.errorMsg}>
+              <p>{message}</p>
+            </div>
             <div className={classes.formInputs}>
               <input
                 className={classes.formInput}
@@ -238,6 +249,10 @@ const useStyles = makeStyles((theme) => ({
     width: "30%",
     borderRadius: 10,
     textTransform: "capitalize",
+  },
+  errorMsg: {
+    color: "red",
+    margin: "0 auto",
   },
 
   "@media (max-width: 768px)": {
