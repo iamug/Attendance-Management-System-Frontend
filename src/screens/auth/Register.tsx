@@ -70,7 +70,7 @@ const Register: React.FC = () => {
     console.log("result");
     console.log(result);
     if (result.payload.payload.auth) {
-      history.push("/login");
+      history.push("/dashboard");
     } else {
       setErrorMessage("Failed Authentication");
     }
