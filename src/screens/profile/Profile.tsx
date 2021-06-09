@@ -49,6 +49,9 @@ const ProfilePage: React.FC = () => {
     history.push("/login");
   };
 
+  const goToResetScreen = () => {
+    history.push('/reset-password')
+  }
   return (
     <React.Fragment>
       <CssBaseline />
@@ -67,7 +70,7 @@ const ProfilePage: React.FC = () => {
                 badgeContent={<i className="fas fa-2x fa-camera"></i>}
               >
                 <Avatar
-                  alt="Travis Howard"
+                  alt="avatar"
                   src={AvatarImg}
                   className={classes.large}
                 />
@@ -114,7 +117,7 @@ const ProfilePage: React.FC = () => {
                     color="primary"
                     gutterBottom
                   >
-                    Email
+                    Email:
                   </Typography>
                 </Box>
 
@@ -132,6 +135,7 @@ const ProfilePage: React.FC = () => {
           <Grid container spacing={5} direction="row" justify="center">
             <Grid item container alignItems="center" xs={10} md={3}>
               <Button
+              onClick={goToResetScreen}
                 variant="contained"
                 size="large"
                 fullWidth

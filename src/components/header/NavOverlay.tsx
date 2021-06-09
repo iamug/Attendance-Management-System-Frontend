@@ -4,11 +4,8 @@ import { Box } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import Clear from "@material-ui/icons/Clear";
 import Modal from "@material-ui/core/Modal";
-
-interface ModalProps {
-  showModal: boolean;
-  exitModal: any;
-}
+import { Link } from "react-router-dom";
+import { ModalProps } from "../../models/modals";
 
 const NavOverlay: React.FC<ModalProps> = (props) => {
   const [open, setOpen] = React.useState(false);
@@ -35,9 +32,24 @@ const NavOverlay: React.FC<ModalProps> = (props) => {
       >
         <Clear fontSize={"large"} />
       </IconButton>
-      <Box className={classes.boxText}>Home</Box>
-      <Box className={classes.boxText}>Dashboard</Box>
-      <Box className={classes.boxText}>Activities</Box>
+      <Link
+        to={"/"}
+        style={{ textDecoration: "none", marginTop: 40, marginBottom: 40 }}
+      >
+        <Box className={classes.boxText}>Home</Box>
+      </Link>
+      <Link
+        to={"/dashboard"}
+        style={{ textDecoration: "none", marginTop: 40, marginBottom: 40 }}
+      >
+        <Box className={classes.boxText}>Dashboard</Box>
+      </Link>
+      <Link
+        to={"/activity"}
+        style={{ textDecoration: "none", marginTop: 40, marginBottom: 40 }}
+      >
+        <Box className={classes.boxText}>Activities</Box>
+      </Link>
     </div>
   );
   return (

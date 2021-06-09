@@ -4,14 +4,12 @@ import { makeStyles } from "@material-ui/core/styles";
 import {Typography,Box,Button} from "@material-ui/core";
 import background from '../../assets/images/background.svg'
 import LineCharting from '../Visual/Visual'
-import DoughtnutContainer from '../Visual/Doughnut/DoughnutContainer'
+import DoughtnutContainer from '../Visual/Doughnut/DoughnutContainer';
+import ChartContainer from '../Visual/chart/chartContainer'
 import ClockInModal from './clockin'
 import Footer from '../footer/Footer'
 import {useAppSelector} from '../../app/hooks'
 import {selectStateValues} from '../../app/auth-redux/authSlice'
-
-
-
 
 const Dashboard:React.FC = () => {
 
@@ -21,6 +19,7 @@ const [openCo, setOpenCo] = useState<boolean>(false);
 const {userData} = useAppSelector(selectStateValues)
  const classes = useStyles()
 
+ 
  const showModal = (name:string) => {
      if(name == 'clockIn'){
          setOpenCi(true)
@@ -53,9 +52,10 @@ const {userData} = useAppSelector(selectStateValues)
                 <h3 style={{color:"#5019EE"}}>Late Days</h3>
             </Box>
             <DoughtnutContainer/>
-            <div style={{marginTop:'3rem'}}>
-                <LineCharting instance="Stats/Closing Hours" timing1="close Early" timing2="close Normal/late"/>
-            </div>
+            <ChartContainer instance="Stats/Closing Hours" timing1="Close Early" timing2="Close Normal/late"/>
+                {/* <div style={{marginTop:'3rem'}}>
+                    <LineCharting instance="Stats/Closing Hours" timing1="close Early" timing2="close Normal/late"/>
+                </div> */}
             <Footer/>           
         </>
     )

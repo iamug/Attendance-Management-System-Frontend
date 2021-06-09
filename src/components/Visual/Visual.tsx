@@ -3,12 +3,13 @@ import { Typography, Box, Button } from "@material-ui/core";
 import filter from "../../assets/images/filter.svg";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
-import { months } from "../../constants";
+import { actualMonth, monthsName } from "../../constants";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import LineChart from "./lineChart";
-import { LensTwoTone } from "@material-ui/icons";
 import moment from "moment";
+import axios from "axios";
+import { baseUrl } from "../../constants";
 
 interface properties {
   instance: string;
@@ -21,78 +22,203 @@ const LineCharting: React.FC<properties> = ({
   timing1,
   timing2,
 }: properties): ReactElement => {
-  //name: string | number;
   const classes = useStyles();
-  const [state, setState] = React.useState<{ choosen: any }>({
-    // name: '',
-    choosen: "weekly",
-  });
+
+  const [actualWeek, setActualWeek] = useState<any>([]);
+  const [weekTime, setWeekTime] = useState<any>([]);
+  const [check, setCheck] = useState<any>(false);
+  const [showmonth, setShowmonth] = useState<any>(false);
   const [month, setMonth] = useState<{ monthName: string }>({
     monthName: moment().format("MMMM"),
   });
-  const [showmonth, setShowmonth] = useState<boolean>(false);
+  const [clockin, setClockin] = useState<string[]>([]);
+  const [checker, setchecker] = useState(false);
+  // const tx:string[] = ['Tue Jun 08 2021 15:38:32 GMT+0100','Mon Jun 07 2021 02:38:32 GMT+0100','Tue May 20 2021 03:00:32 GMT+0100','Mon May 17 2021 06:05:32 GMT+0100','Tue May 18 2021 04:10:32 GMT+0100','Wed May 26 2021 07:30:32 GMT+0100','Tue May 27 2021 17:11:32 GMT+0100','Mon May 03 2021 09:10:32 GMT+0100','Tue May 04 2021 05:20:32 GMT+0100','Sun May 02 2021 11:04:32 GMT+0100','Sun Feb 21 2021 02:30:32 GMT+0100']
 
-  const [val, setVal] = React.useState<{ label: string[]; data: number[] }>({
-    label: [],
+  const [monthlyClick, setmonthlyClick] = useState<number[]>([]);
+  const [result, setResult] = useState<any>({
+    labels: [],
     data: [],
+    value: "weekly",
   });
 
   useEffect(() => {
-    changeValue();
-  }, [state]);
+    getData();
+    getMonth();
+  }, []);
 
-  const changeValue = () => {
-    if (state.choosen == "weekly") {
+  useEffect(() => {
+    getMonthClick();
+    getyearlyClick();
+  }, [clockin, check]);
+
+  useEffect(() => {
+    onChangeHandler();
+  }, [check, monthlyClick]);
+
+  const getData = async () => {
+    const weekValue: any = [];
+    const weektime: any = [];
+    const clockInArr: any = [];
+    const token = localStorage.getItem("user-token");
+    const {
+      data: {
+        payload: { data },
+      },
+    } = await axios.get(`${baseUrl}activities`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    data.map((act: any) => {
+      for (let key in act) {
+        if (key == "clockedIn") {
+          clockInArr.push(act["createdAt"]);
+        } else if (key == "clockedOut") {
+          //  setClockOut(act['createdAt'])
+          return null;
+        }
+      }
+    });
+    setClockin(clockInArr);
+    clockInArr.map((value: any) => {
+      const currentWeek = moment().week() - 1;
+      if (moment(value).week() == currentWeek) {
+        const weekName = moment(value).toString().split(" ")[0];
+        weekValue.push(weekName);
+        const time = parseFloat(
+          moment(value).format("HH:mm").split(":").join(".")
+        );
+        weektime.push(time);
+      } else {
+        console.log("");
+      }
+    });
+    setActualWeek(weekValue);
+    setWeekTime(weektime);
+    setResult({
+      ...result,
+      labels: weekValue,
+      data: weektime,
+    });
+  };
+
+  const removeDuplicate = (data: any) => {
+    let stringify = data.map(JSON.stringify);
+    let newValue = new Set(stringify);
+    let parse: any = JSON.parse;
+    const nonDuplicate = Array.from(newValue, parse);
+    return nonDuplicate;
+  };
+
+  const getMonthClick = () => {
+    let arr: string[] = [];
+    const list: any = [];
+    //clockin
+    clockin.map((dates) => {
+      const getMonth = moment().month(month.monthName).format("M");
+      if (1 + moment(dates).month() == +getMonth) {
+        arr.push(dates);
+      }
+    });
+    arr.sort().map((res: string) => {
+      const acc: number[] = [];
+      for (let key of arr) {
+        if (moment(res).week() == moment(key).week()) {
+          acc.push(+moment(key).format("HH:mm").split(":").join("."));
+        }
+      }
+      list.push(acc);
+    });
+    const nondup: any = removeDuplicate(list);
+    const val = nondup.map((arr: any) =>
+      arr.reduce((sum: "", item: number) => (sum += item / arr.length), 0)
+    );
+    setmonthlyClick(val);
+    arr = [];
+  };
+
+  const getyearlyClick = () => {
+    let currentYear: any = [];
+    const list: any = [];
+    const finalArray: any = [];
+    let getmonths: any = [];
+    //clockin
+    clockin.map((dates) => {
+      if (
+        moment(dates).toString().split(" ")[3] ==
+        moment().toString().split(" ")[3]
+      ) {
+        currentYear.push(dates);
+      }
+    });
+
+    currentYear.map((months: any) => {
+      for (let i = 0; i <= monthsName.length; i++) {
+        if (moment(months).toString().split(" ")[1] == monthsName[i]) {
+          list.push(moment(months).toString().split(" ")[1]);
+        }
+        console.log(list);
+      }
+    });
+  };
+
+  const onChangeHandler = () => {
+    if (result.value == "weekly") {
       setShowmonth(false);
-      return setVal({
-        label: ["monday", "tuesday", "wednesday", "thursday"],
-        data: [3, 5, 9, 6],
+      return setResult({
+        labels: actualWeek,
+        data: weekTime,
+        value: "weekly",
       });
-    } else if (state.choosen == "monthly") {
+    } else if (result.value == "monthly") {
+      setchecker(!checker);
       setShowmonth(true);
-      return setVal({
-        label: ["week1", "week2", "week3", "week4"],
-        data: [9.0, 8.0, 7.0, 10.0],
+      return setResult({
+        labels: ["week1", "week2", "week3", "week4"],
+        data: monthlyClick,
+        value: "monthly",
       });
-    } else if (state.choosen == "yearly") {
+    } else if (result.value == "yearly") {
       setShowmonth(false);
-      return setVal({
-        label: ["january", "febuary", "march", "april"],
-        data: [9, 6, 10, 5],
+      return setResult({
+        labels: ["jan", "feb", "march", "april"],
+        data: [6, 7, 9, 4],
+        value: "yearly",
       });
     }
   };
 
+  const handleChange = (event: React.ChangeEvent<{ value: any }>) => {
+    setCheck(!check);
+    // setCheck(prevVal=>())
+    setResult({
+      ...result,
+      value: event.target.value,
+    });
+  };
+
   const getMonth = () => {
     let val: any[] = [];
-    months.map((mth, index) => {
+    actualMonth.map((mth, index) => {
       val.push(
         <option key={index * Math.random()} value={mth}>
           {mth}
         </option>
       );
     });
-    console.log(month.monthName);
     return val;
   };
 
   const handleMonthly = (
     event: React.ChangeEvent<{ name?: string; value: any }>
   ) => {
+    setCheck(!check);
     setMonth({
       monthName: event.target.value,
     });
   };
 
-  const handleChange = (
-    event: React.ChangeEvent<{ name?: string; value: any }>
-  ) => {
-    // const name = event.target.name as keyof typeof state;
-    setState({
-      // ...state,
-      choosen: event.target.value,
-    });
-  };
   return (
     <>
       <Box className={classes.stats}>
@@ -111,7 +237,7 @@ const LineCharting: React.FC<properties> = ({
               <Select
                 style={{ padding: 0 }}
                 native
-                value={state.choosen}
+                value={result.value}
                 onChange={handleChange}
                 label="Age"
                 inputProps={{
@@ -154,7 +280,6 @@ const LineCharting: React.FC<properties> = ({
           <div className={classes.smallDotBlue}></div>
           <span style={{ marginLeft: "1rem" }}>{timing1}</span>
         </Box>
-
         <Box
           style={{ display: "flex", marginLeft: "4rem", alignItems: "center" }}
         >
@@ -162,7 +287,11 @@ const LineCharting: React.FC<properties> = ({
           <span style={{ marginLeft: "1rem" }}>{timing2}</span>
         </Box>
       </Box>
-      <LineChart labels={val.label} data={val.data} />
+      <LineChart
+        labels={result.labels}
+        data={result.data}
+        title="Opening Hour(s)"
+      />
     </>
   );
 };

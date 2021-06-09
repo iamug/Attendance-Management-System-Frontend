@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
@@ -12,8 +12,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import { Link } from "react-router-dom";
 import axios from 'axios'
 import {baseUrl} from '../../constants/index'
-import { promises } from "fs";
-
+import {clockinUserDashboard} from '../../app/clockInAPI'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -37,7 +36,7 @@ interface ClockInModalProps {
   setOpenCi: any;
   name:string;
   openCo:boolean;
-  setOpenCo:any
+  setOpenCo:any;
 }
 
 const ClockInModal: React.FC<ClockInModalProps> = ({
@@ -45,12 +44,11 @@ const ClockInModal: React.FC<ClockInModalProps> = ({
   setOpenCi,
   name,
   openCo,
-  setOpenCo
+  setOpenCo,
 }: ClockInModalProps) => {
-
-const [clockIn,setclockIn] = useState(false)
-const [loading,setLoading] = useState<boolean>(true)
-const [mesage,setMessage] = useState<string>('')
+  const [clockIn, setclockIn] = useState(false);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [mesage, setMessage] = useState<string>("");
   const classes = useStyles();
   const [email, setEmail] = useState("");
 //   const [loading, setLoading] = useState(false);
@@ -71,35 +69,31 @@ const cancelModal = () => {
 
 
 const getData = async()=>{
-  const token = localStorage.getItem('user-token')
-       navigator.geolocation.getCurrentPosition(async({ coords }):Promise<any>=>{
-       let data = {"location":{
-                       "long":coords.longitude,
-                       "lat":coords.latitude
-                   }}  
-
-       try{
-         const clock = openCi ? 'clockin' : 'clockout'
-      const {data:{payload}}  =  await axios.post(`${baseUrl}${clock}`,data ,{
-           headers: {
-               'Authorization': `Bearer ${token}`
-           }  
-           })
-           setMessage(payload)
+  try {
+    setLoading(true);
+    if (navigator.geolocation) { 
+      navigator.geolocation.getCurrentPosition(async ({ coords }) => {
+        let body = {lat:coords.latitude, long: coords.longitude };
+        console.log(body)
+        let response = await clockinUserDashboard(body,openCi)     
+        if(response.status == 200){ 
+          setMessage(response.data.payload)
            setLoading(false)
            setclockIn(true)
-       
-   }catch(err){
-    setclockIn(true)
-    setLoading(false)
-       if(err.message.split(' ')[5] == 417){
-         openCi ? setMessage(`Hi ${name}, you have already clocked in for today`) : setMessage(`Hi ${name}, you have already clocked out for today`)
-       }else{
-         setMessage(err)
-       }
-   }
-}
-)}
+        }else{
+          setMessage(response.data.payload)
+          setLoading(false)
+          setclockIn(true) 
+        }
+      });
+    } else {
+      console.log(" location failed");
+    }
+  } catch (error) {
+    console.log({ error });
+  }
+}           
+
 
 
 
@@ -113,7 +107,7 @@ useEffect(()=>{
     console.log('')
   }
   
-  },[openCi || openCo])
+},[openCi || openCo])
 
   return (
     <React.Fragment>
@@ -125,19 +119,18 @@ useEffect(()=>{
         BackdropComponent={Backdrop}
         BackdropProps={{ timeout: 500 }}
       >
-          
         <Slide in={openCi || openCo}>
           <div className={classes.paper}>
             <Box textAlign="right" color="primary.main" mb={6}>
-              <i
-                className="fas fa-1x fa-times"
-                onClick={() => cancelModal()}
-              />
-                {
-                clockIn?<Box style={{textAlign:'center',marginTop:'1rem'}} > {mesage} </Box> : null
-                }
+              <i className="fas fa-1x fa-times" onClick={() => cancelModal()} />
+              {clockIn ? (
+                <Box style={{ textAlign: "center", marginTop: "1rem" }}>
+                  {" "}
+                  {mesage}{" "}
+                </Box>
+              ) : null}
             </Box>
-           
+
             {loading && (
               <Box mt={8} mb={8}>
                 <Grid
@@ -162,7 +155,7 @@ useEffect(()=>{
                   </Grid>
                 </Grid>
               </Box>
-             )} 
+            )}
           </div>
         </Slide>
       </Modal>
