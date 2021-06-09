@@ -12,8 +12,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import { Link } from "react-router-dom";
 import axios from 'axios'
 import {baseUrl} from '../../constants/index'
-import { promises } from "fs";
-
+import {clockinUserDashboard} from '../../app/clockInAPI'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -37,7 +36,7 @@ interface ClockInModalProps {
   setOpenCi: any;
   name:string;
   openCo:boolean;
-  setOpenCo:any
+  setOpenCo:any;
 }
 
 const ClockInModal: React.FC<ClockInModalProps> = ({
@@ -45,7 +44,7 @@ const ClockInModal: React.FC<ClockInModalProps> = ({
   setOpenCi,
   name,
   openCo,
-  setOpenCo
+  setOpenCo,
 }: ClockInModalProps) => {
 
 const [clockIn,setclockIn] = useState(false)
@@ -71,35 +70,31 @@ const cancelModal = () => {
 
 
 const getData = async()=>{
-  const token = localStorage.getItem('user-token')
-       navigator.geolocation.getCurrentPosition(async({ coords }):Promise<any>=>{
-       let data = {"location":{
-                       "long":coords.longitude,
-                       "lat":coords.latitude
-                   }}  
-
-       try{
-         const clock = openCi ? 'clockin' : 'clockout'
-      const {data:{payload}}  =  await axios.post(`${baseUrl}${clock}`,data ,{
-           headers: {
-               'Authorization': `Bearer ${token}`
-           }  
-           })
-           setMessage(payload)
+  try {
+    setLoading(true);
+    if (navigator.geolocation) { 
+      navigator.geolocation.getCurrentPosition(async ({ coords }) => {
+        let body = {lat:coords.latitude, long: coords.longitude };
+        console.log(body)
+        let response = await clockinUserDashboard(body,openCi)     
+        if(response.status == 200){ 
+          setMessage(response.data.payload)
            setLoading(false)
            setclockIn(true)
-       
-   }catch(err){
-    setclockIn(true)
-    setLoading(false)
-       if(err.message.split(' ')[5] == 417){
-         openCi ? setMessage(`Hi ${name}, you have already clocked in for today`) : setMessage(`Hi ${name}, you have already clocked out for today`)
-       }else{
-         setMessage(err)
-       }
-   }
-}
-)}
+        }else{
+          setMessage(response.data.payload)
+          setLoading(false)
+          setclockIn(true) 
+        }
+      });
+    } else {
+      console.log(" location failed");
+    }
+  } catch (error) {
+    console.log({ error });
+  }
+}           
+
 
 
 
@@ -113,7 +108,7 @@ useEffect(()=>{
     console.log('')
   }
   
-  },[openCi || openCo])
+},[openCi || openCo])
 
   return (
     <React.Fragment>

@@ -24,12 +24,24 @@ export async function clockinUserHomepage(
   }
 }
 
-export async function clockinUserDashboard(): Promise<any> {
+export async function clockinUserDashboard(
+  location:{
+    lat:number,   
+    long:number
+  },
+  openCi?:boolean
+): Promise<any> {
   try {
-    let body = {};
-    const response = await axios.post(`${baseUrl}clockin`, body, { headers });
-    return response.data;
+    const clock = openCi ? 'clockin' : 'clockout'
+
+    let body = {
+      location
+    };
+    const response = await axios.post(`${baseUrl}${clock}`, body, { headers });
+    return response;
   } catch (error) {
-    console.log(error.response);
+    return error.response;
   }
 }
+
+

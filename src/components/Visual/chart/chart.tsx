@@ -16,7 +16,6 @@ const LineChart:React.FC<lines> = ({labels,data,title}:lines) => {
             <Line
                 type="line"
                 data={{
-                    legend:'line chart',
                     // labels:['Monday', 'Tuesday','Wednesday','Thursday','Friday'],
                     labels,
                     datasets: [{
@@ -27,7 +26,7 @@ const LineChart:React.FC<lines> = ({labels,data,title}:lines) => {
                         pointBackgroundColor: function(context:any){
                             var index = context.dataIndex
                             var value = context.dataset.data[index]
-                            return value <= 9 ? '#5019EE' : '#EEB219'
+                            return value <= 17 ? '#5019EE' : '#EEB219'
                         },
                         pointBorderColor: 'transparent',
                         radius: 4,
@@ -64,7 +63,7 @@ const LineChart:React.FC<lines> = ({labels,data,title}:lines) => {
                         display: false
                       },
                 },
-                    
+                   
                     // responsive: true,
                     // maintainAspectRatio: false,
                 }}
