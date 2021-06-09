@@ -1,22 +1,22 @@
 import React, { ReactElement,useEffect, useState } from 'react'
 import {Typography,Box,Button} from "@material-ui/core";
-import filter from '../../assets/images/filter.svg'
+import filter from '../../../assets/images/filter.svg'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
-import {actualMonth,monthsName} from '../../constants'
+import {actualMonth} from '../../../constants'
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import LineChart from './lineChart'
+import LineChart from '../lineChart'
 import moment from 'moment';
 import axios from 'axios'
-import {baseUrl} from '../../constants'
+import {baseUrl} from '../../../constants'
 
 
 
 interface properties{
 instance:string,
 timing1?:string,
-timing2:string
+timing2:string;
 }
 
 const LineCharting:React.FC<properties> = ({instance,timing1,timing2}:properties):ReactElement => {
@@ -45,7 +45,6 @@ getMonth()
 
 useEffect(()=> {
   getMonthClick()
-  getyearlyClick()
 },[clockin,check])
 
 useEffect(()=> {
@@ -66,16 +65,16 @@ useEffect(()=> {
           data.map((act:any)=>{
               for(let key in act) {
                   if(key == 'clockedIn'){
-                    clockInArr.push(act['createdAt'])
+                    return null
                   }else if(key == 'clockedOut'){
                   //  setClockOut(act['createdAt'])
-                   return null
+                  clockInArr.push(act['createdAt'])
                   }         
           }
           })
             setClockin(clockInArr)
             clockInArr.map((value:any)=> {
-            const currentWeek = (moment().week())-1
+            const currentWeek = (moment().week())
             if(moment(value).week() == currentWeek){
               const weekName = moment(value).toString().split(' ')[0]
               weekValue.push(weekName)
@@ -92,7 +91,7 @@ useEffect(()=> {
             labels:weekValue,
             data:weektime,
           })
-
+         
 }
 
 const removeDuplicate = (data:any) => {
@@ -125,31 +124,8 @@ const getMonthClick = () => {
     const nondup:any = removeDuplicate(list)
     const val = nondup.map((arr:any)=>arr.reduce((sum:'',item:number)=>sum += item/arr.length,0));
     setmonthlyClick(val)
+
     arr = []
-}
-
-const getyearlyClick = () => {
-  let currentYear:any= []
-  const list:any= []
-  const finalArray:any = []
-  let getmonths:any = []
-  //clockin
-  clockin.map(dates=> {
-    if(moment(dates).toString().split(' ')[3] == moment().toString().split(' ')[3]){
-      currentYear.push(dates)
-    }
-  })
-
-  currentYear.map((months:any)=> {
-    for(let i=0; i<=monthsName.length;i++){
-      if(moment(months).toString().split(' ')[1] == monthsName[i]) {
-        list.push(moment(months).toString().split(' ')[1])
-     }
-     console.log(list)
-    }
-     
-  })
-
  
 }
 
@@ -272,7 +248,7 @@ return (
             <LineChart
               labels={result.labels}
               data={result.data}
-              title='Opening Hour(s)'
+              title="Closing Hour(s)"
             />
         </>
     )

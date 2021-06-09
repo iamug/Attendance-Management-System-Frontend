@@ -7,18 +7,25 @@ import moment from 'moment'
 
 const DoughnutContainer = () => {
    const [punctual,setPunctual] = useState<any>([])
-   const [behind,setBehind] = useState<any>([])
+   let [behind,setBehind] = useState<any>([])
+    let behindData:number[] = []
    const early:any = []
    const late:any = []
    const extra:any = []
+   const punctualData:any = []
+   const [weekEarly,setWeekEarly] = useState([])
+   const [weekLate,setWeekLate] = useState([])
+
 
     useEffect(()=>{
       mark()     
-    },[punctual])
+    },[])
+
 
 
     const mark = async() => {
         const clockIn:any[]=[]
+        // const clockIn:any[]=["2021-06-01T11:55:08","2021-06-02T08:55:08","2021-06-03T07:55:08","2021-06-04T08:00:08","2021-06-05T13:55:08"]
         const clockOut:any[]=[]
         const values:any = []
         
@@ -39,16 +46,17 @@ const DoughnutContainer = () => {
                   }         
           }
           })
-        
+
+
           //Here is all our clock in Data
           if(clockIn){
             clockIn.map(clin=> {
-                const current =  moment().week()
+                const current =  (moment().week())-1
+                // console.log('current',':',current,'fetch',':',moment(clin).week())
             if(moment(clin).week() == current){
                     const weekName = moment(clin).toString().split(' ')[0]
                     const time = moment(clin).format("HH:mm")
                     values.push({[weekName]:time})
-                    console.log(values)
                 }else{
                     console.log('')
                 }            
@@ -81,8 +89,9 @@ const DoughnutContainer = () => {
         })
       const sorted:number|any = unknown.sort()[unknown.length-1] * 1.2
       unknown.map((list:any)=>{
-        setPunctual(+(sorted - list).toFixed(3))
+        punctualData.push(+(sorted - list).toFixed(3))
       })
+      setPunctual(punctualData)
 
 
     //  Late time in the format 13:20
@@ -93,34 +102,16 @@ const DoughnutContainer = () => {
             }
         })
         uni.map((slip:any)=>{
-            setBehind(slip.split(':').join('.'))
-            console.log(behind,'last data value')
+            behindData.push(+slip.split(':').join('.'))
+         
         })
-    
-        const valuee:any = []
-        // const extra:any = []
-        let num = 0
-        early.map((item:any)=>{
-            for (let key in item){
-                valuee.push(item[key])
-                valuee.sort() 
-                
-            }
-        })
-        valuee.map((first:any)=> {
-            early.map((sec:any,index:number)=> {
-                for(let key in sec){
-                   if(first == sec[key]){
-                    extra.push(<p key={index* Math.random()+ num}>{key} - {sec[key]}</p>)
-                    num++
-                } else{
-                    const v = ''
-                   }    
-                }
-            })
-        })
-     
+        setBehind(behindData)
+
+
+        setWeekEarly(early)
+        setWeekLate(late)     
     }
+
     
     return (
         <Grid  container>
@@ -132,10 +123,10 @@ const DoughnutContainer = () => {
                 style={{marginBottom:"5rem"}}
             >
                 <DoughnutType 
-                    data={[punctual]}
-                    backgroundColor={["#EEB219", "#02C12C"]} 
+                    data={punctual}
+                    backgroundColor={["#EEB219", "#02C12C","#5019EE","#D3C5FB","#581845"]} 
                     left="true"
-                    weekDay={extra}
+                    weekDay={weekEarly}
                     sort={true}
                 />  
             </Grid>
@@ -147,10 +138,10 @@ const DoughnutContainer = () => {
                 style={{marginBottom:"5rem"}}
             >
                 <DoughnutType 
-                    data={[behind]}
-                    backgroundColor={["#EE4C19","#160547"]}
+                    data={behind}
+                    backgroundColor={["#EE4C19","#160547","grey","#182567","orange"]}
                     right="true" 
-                    weekDay={late}
+                    weekDay={weekLate}
                     sort={false}
                 />
             </Grid>
