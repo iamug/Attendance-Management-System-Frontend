@@ -1,11 +1,6 @@
 import axios from "axios";
 import { baseUrl } from "../constants/index";
 
-const headers = {
-  "Content-Type": "application/json",
-  Authorization: `Bearer ${localStorage.getItem("user-token")}`,
-};
-
 interface location {
   lat: number;
   long: number;

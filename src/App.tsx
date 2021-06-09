@@ -28,6 +28,9 @@ const theme = createMuiTheme({
       contrastText: "#ffffff",
     },
   },
+  typography: {
+    fontFamily: "Montserrat, Spartan",
+  },
   overrides: {
     MuiButton: {
       outlinedPrimary: {

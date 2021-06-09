@@ -10,9 +10,9 @@ import Backdrop from "@material-ui/core/Backdrop";
 import TextField from "@material-ui/core/TextField";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { Link } from "react-router-dom";
-import axios from "axios";
-import { baseUrl } from "../../constants/index";
-import { promises } from "fs";
+import axios from 'axios'
+import {baseUrl} from '../../constants/index'
+import {clockinUserDashboard} from '../../app/clockInAPI'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -34,9 +34,9 @@ const useStyles = makeStyles((theme: Theme) =>
 interface ClockInModalProps {
   openCi: boolean;
   setOpenCi: any;
-  name: string;
-  openCo: boolean;
-  setOpenCo: any;
+  name:string;
+  openCo:boolean;
+  setOpenCo:any;
 }
 
 const ClockInModal: React.FC<ClockInModalProps> = ({
@@ -51,69 +51,63 @@ const ClockInModal: React.FC<ClockInModalProps> = ({
   const [mesage, setMessage] = useState<string>("");
   const classes = useStyles();
   const [email, setEmail] = useState("");
-  //   const [loading, setLoading] = useState(false);
+//   const [loading, setLoading] = useState(false);
 
-  const [geo, leo] = useState<{ lat: null | number; long: null | number }>({
-    lat: null,
-    long: null,
-  });
+const [geo,leo] = useState<{lat:null | number,long:null |number}>({
+    lat:null,
+    long:null
+})
 
-  const cancelModal = () => {
-    setMessage("");
-    if (openCo) {
-      setOpenCo(!openCo);
-    } else if (openCi) {
-      setOpenCi(!openCi);
-    }
-  };
 
-  const getData = async () => {
-    const token = localStorage.getItem("user-token");
-    navigator.geolocation.getCurrentPosition(
-      async ({ coords }): Promise<any> => {
-        let data = {
-          location: {
-            long: coords.longitude,
-            lat: coords.latitude,
-          },
-        };
+const cancelModal = () => {
+  if(openCo){
+    setOpenCo(!openCo)
+  }else if(openCi){
+    setOpenCi(!openCi)
+  }
+}
 
-        try {
-          const clock = openCi ? "clockin" : "clockout";
-          const {
-            data: { payload },
-          } = await axios.post(`${baseUrl}${clock}`, data, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          setMessage(payload);
-          setLoading(false);
-          setclockIn(true);
-        } catch (err) {
-          setclockIn(true);
-          setLoading(false);
-          if (err.message.split(" ")[5] == 417) {
-            openCi
-              ? setMessage(`Hi ${name}, you have already clocked in for today`)
-              : setMessage(
-                  `Hi ${name}, you have already clocked out for today`
-                );
-          } else {
-            setMessage(err);
-          }
+
+const getData = async()=>{
+  try {
+    setLoading(true);
+    if (navigator.geolocation) { 
+      navigator.geolocation.getCurrentPosition(async ({ coords }) => {
+        let body = {lat:coords.latitude, long: coords.longitude };
+        console.log(body)
+        let response = await clockinUserDashboard(body,openCi)     
+        if(response.status == 200){ 
+          setMessage(response.data.payload)
+           setLoading(false)
+           setclockIn(true)
+        }else{
+          setMessage(response.data.payload)
+          setLoading(false)
+          setclockIn(true) 
         }
-      }
-    );
-  };
-
-  useEffect(() => {
-    if (openCi || openCo) {
-      getData();
+      });
     } else {
-      console.log("");
+      console.log(" location failed");
     }
-  }, [openCi || openCo]);
+  } catch (error) {
+    console.log({ error });
+  }
+}           
+
+
+
+
+
+
+
+useEffect(()=>{
+  if(openCi || openCo){
+    getData()
+  }else{
+    console.log('')
+  }
+  
+},[openCi || openCo])
 
   return (
     <React.Fragment>
