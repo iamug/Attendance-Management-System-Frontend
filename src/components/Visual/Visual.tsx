@@ -15,12 +15,14 @@ interface properties {
   instance: string;
   timing1?: string;
   timing2: string;
+  update:boolean
 }
 
 const LineCharting: React.FC<properties> = ({
   instance,
   timing1,
   timing2,
+  update
 }: properties): ReactElement => {
   const classes = useStyles();
 
@@ -43,9 +45,25 @@ const LineCharting: React.FC<properties> = ({
   });
 
   useEffect(() => {
-    getData();
-    getMonth();
-  }, []);
+    // if(update){
+    //   setTimeout(getData,5000)
+    // }
+    setTimeout(
+    getData
+  ,1000)
+    // getData();
+    // getMonth();
+  },[update]);
+
+
+  useEffect(() => {
+    setTimeout(
+      getMonth
+  ,2000)
+},[update]);
+
+ 
+
 
   useEffect(() => {
     getMonthClick();
@@ -175,7 +193,7 @@ const LineCharting: React.FC<properties> = ({
       setchecker(!checker);
       setShowmonth(true);
       return setResult({
-        labels: ["week1", "week2", "week3", "week4"],
+        labels: ["week1", "week2", "week3", "week4",'week5'],
         data: monthlyClick,
         value: "monthly",
       });

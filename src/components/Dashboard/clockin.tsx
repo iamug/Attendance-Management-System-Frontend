@@ -12,7 +12,11 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import { Link } from "react-router-dom";
 import axios from 'axios'
 import {baseUrl} from '../../constants/index'
-import {clockinUserDashboard} from '../../app/clockInAPI'
+import {clockinUserDashboard,clockinUserHomepage} from '../../app/clockInAPI'
+import {useAppSelector} from '../../app/hooks'
+import {selectStateValues} from '../../app/auth-redux/authSlice'
+
+
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -50,8 +54,9 @@ const ClockInModal: React.FC<ClockInModalProps> = ({
   const [loading, setLoading] = useState<boolean>(true);
   const [mesage, setMessage] = useState<string>("");
   const classes = useStyles();
-  const [email, setEmail] = useState("");
+  // const [email, setEmail] = useState("");
 //   const [loading, setLoading] = useState(false);
+
 
 const [geo,leo] = useState<{lat:null | number,long:null |number}>({
     lat:null,
@@ -70,35 +75,58 @@ const cancelModal = () => {
 
 const getData = async()=>{
   try {
-    setLoading(true);
-    if (navigator.geolocation) { 
-      navigator.geolocation.getCurrentPosition(async ({ coords }) => {
-        let body = {lat:coords.latitude, long: coords.longitude };
-        console.log(body)
-        let response = await clockinUserDashboard(body,openCi)     
-        if(response.status == 200){ 
-          setMessage(response.data.payload)
-           setLoading(false)
-           setclockIn(true)
-        }else{
-          setMessage(response.data.payload)
-          setLoading(false)
-          setclockIn(true) 
-        }
-      });
-    } else {
-      console.log(" location failed");
+setLoading(true);
+if (navigator.geolocation) { 
+
+  navigator.geolocation.getCurrentPosition(async ({ coords }) => {
+    let body = {lat:coords.latitude, long: coords.longitude }; 
+   
+     const type = "application/json"
+      const token = `Bearer ${localStorage.getItem("user-token")}`
+    
+    let response = await clockinUserDashboard(body,type,token,openCi)
+    if(response.status == 200){
+      setLoading(false) 
+      setMessage(response.data.payload)
+       setclockIn(true)
+      // alert(response.data.payload)
+      //  alert(false)
+      //  alert(true)
+    }else{
+      setLoading(false)
+      setMessage(response.data.payload)
+      setclockIn(true) 
+      // alert(response.data.payload)
+      // alert(false)
+      // alert(true) 
     }
-  } catch (error) {
-    console.log({ error });
-  }
-}           
+  });
+} else {
+  console.log(" location failed");
+
+}
+} catch (error) {
+console.log({ error });
+}
+
+} 
 
 
 
 
 
+// useEffect(()=>{
+//   getData()
+// },[])
 
+// useEffect(()=>{
+//   if(openCi || openCo){
+//     getData()
+//   }else{
+//     console.log('')
+//   }
+  
+// },[openCi || openCo])
 
 useEffect(()=>{
   if(openCi || openCo){
@@ -107,7 +135,9 @@ useEffect(()=>{
     console.log('')
   }
   
-},[openCi || openCo])
+},[openCi,openCo])
+
+
 
   return (
     <React.Fragment>

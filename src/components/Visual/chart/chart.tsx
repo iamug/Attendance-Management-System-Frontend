@@ -16,7 +16,6 @@ const LineChart:React.FC<lines> = ({labels,data,title}:lines) => {
             <Line
                 type="line"
                 data={{
-                    // labels:['Monday', 'Tuesday','Wednesday','Thursday','Friday'],
                     labels,
                     datasets: [{
                         // data: [9,11, 9, 10, 9.2,7],

@@ -6,7 +6,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import {actualMonth} from '../../../constants'
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import LineChart from '../lineChart'
+import LineChart from './chart'
 import moment from 'moment';
 import axios from 'axios'
 import {baseUrl} from '../../../constants'
@@ -17,9 +17,10 @@ interface properties{
 instance:string,
 timing1?:string,
 timing2:string;
+update:boolean
 }
 
-const LineCharting:React.FC<properties> = ({instance,timing1,timing2}:properties):ReactElement => {
+const LineCharting:React.FC<properties> = ({instance,timing1,timing2,update}:properties):ReactElement => {
   const classes = useStyles();
 
   const [actualWeek,setActualWeek] = useState<any>([])
@@ -38,10 +39,14 @@ const LineCharting:React.FC<properties> = ({instance,timing1,timing2}:properties
     value:'weekly'
   })
 
+
 useEffect(()=> {
-getData()
-getMonth()
-},[])
+  setTimeout(
+    getDataSet
+  ,3000)
+},[update])
+
+
 
 useEffect(()=> {
   getMonthClick()
@@ -52,7 +57,7 @@ useEffect(()=> {
 },[check,monthlyClick])
 
 
-  const getData = async() => {
+  const getDataSet = async() => {
     const weekValue:any = []
     const weektime:any= []
     const clockInArr:any = []
@@ -143,7 +148,7 @@ const onChangeHandler = () => {
      setchecker(!checker)
     setShowmonth(true)
     return setResult({
-      labels:['week1','week2','week3','week4'],
+      labels:['week1','week2','week3','week4','week5'],
       data:monthlyClick,
       value:'monthly'
     })

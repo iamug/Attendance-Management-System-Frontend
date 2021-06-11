@@ -5,7 +5,10 @@ import axios from 'axios';
 import {baseUrl} from '../../../constants/index'
 import moment from 'moment'
 
-const DoughnutContainer = () => {
+interface properties {
+    update:boolean
+  }
+const DoughnutContainer = ({update}:properties) => {
    const [punctual,setPunctual] = useState<any>([])
    let [behind,setBehind] = useState<any>([])
     let behindData:number[] = []
@@ -18,8 +21,11 @@ const DoughnutContainer = () => {
 
 
     useEffect(()=>{
-      mark()     
-    },[])
+        setTimeout(()=>{
+           mark()
+        },1000)
+    //   mark()     
+    },[update])
 
 
 

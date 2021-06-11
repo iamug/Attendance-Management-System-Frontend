@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useEffect, useState} from 'react'
 import Header from '../header/NavHeader'
 import { makeStyles } from "@material-ui/core/styles";
 import {Typography,Box,Button} from "@material-ui/core";
@@ -15,12 +15,15 @@ const Dashboard:React.FC = () => {
 
 const [openCi, setOpenCi] = useState<boolean>(false);
 const [openCo, setOpenCo] = useState<boolean>(false);
+let [update,setUpdate] = useState(false)
 
 const {userData} = useAppSelector(selectStateValues)
  const classes = useStyles()
 
- 
+
  const showModal = (name:string) => {
+    //  setUpdate(true)
+    setUpdate(!update)
      if(name == 'clockIn'){
          setOpenCi(true)
          setOpenCo(false)
@@ -46,13 +49,13 @@ const {userData} = useAppSelector(selectStateValues)
                     </Button> 
                 </Box>     
             </Typography>
-            <LineCharting instance="Stats/Opening Hours" timing1="Punctual" timing2="Late"/>
+            <LineCharting instance="Stats/Opening Hours" timing1="Punctual" timing2="Late" update={update}/>
             <Box component="span" className={classes.hours}>
                 <h3 style={{color:"#5019EE"}}>Punctual days</h3>
                 <h3 style={{color:"#5019EE"}}>Late Days</h3>
             </Box>
-            <DoughtnutContainer/>
-            <ChartContainer instance="Stats/Closing Hours" timing1="Close Early" timing2="Close Normal/late"/>
+            <DoughtnutContainer update={update}/>
+            <ChartContainer instance="Stats/Closing Hours" timing1="Close Early" timing2="Close Normal/late" update={update}/>
                 {/* <div style={{marginTop:'3rem'}}>
                     <LineCharting instance="Stats/Closing Hours" timing1="close Early" timing2="close Normal/late"/>
                 </div> */}
@@ -62,6 +65,7 @@ const {userData} = useAppSelector(selectStateValues)
 }
 
 const useStyles = makeStyles((theme) => ({
+
     bkimage:{
         position:"absolute",
         top:0,
@@ -81,7 +85,7 @@ const useStyles = makeStyles((theme) => ({
         width:'13rem',
         padding:'.8rem 0',
         fontSize:'11px',
-        textTransform:"capitalize"
+        textTransform:"capitalize",
     },
     name: {
         fontSize:"17px",
@@ -93,7 +97,10 @@ const useStyles = makeStyles((theme) => ({
         marginTop:'3rem',
         display:"flex",
         justifyContent:"center",
-        color:"#fff"
+        color:"#fff",
+        // [theme.breakpoints.down("sm")]: {
+        //     justifyContent:'left',
+        //   }
     }
 
 }))
