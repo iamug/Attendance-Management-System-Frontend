@@ -35,7 +35,7 @@ const LineCharting: React.FC<properties> = ({
   });
   const [clockin, setClockin] = useState<string[]>([]);
   const [checker, setchecker] = useState(false);
-  // const tx:string[] = ['Tue Jun 08 2021 15:38:32 GMT+0100','Mon Jun 07 2021 02:38:32 GMT+0100','Tue May 20 2021 03:00:32 GMT+0100','Mon May 17 2021 06:05:32 GMT+0100','Tue May 18 2021 04:10:32 GMT+0100','Wed May 26 2021 07:30:32 GMT+0100','Tue May 27 2021 17:11:32 GMT+0100','Mon May 03 2021 09:10:32 GMT+0100','Tue May 04 2021 05:20:32 GMT+0100','Sun May 02 2021 11:04:32 GMT+0100','Sun Feb 21 2021 02:30:32 GMT+0100']
+  const tx:string[] = ['Tue Jun 08 2021 15:38:32 GMT+0100','Mon Jun 07 2021 02:38:32 GMT+0100','Tue May 20 2021 03:00:32 GMT+0100','Mon May 17 2021 06:05:32 GMT+0100','Tue May 18 2021 04:10:32 GMT+0100','Wed May 26 2021 07:30:32 GMT+0100','Tue May 27 2021 17:11:32 GMT+0100','Mon May 03 2021 09:10:32 GMT+0100','Tue May 04 2021 05:20:32 GMT+0100','Sun May 02 2021 11:04:32 GMT+0100','Sun Feb 21 2021 02:30:32 GMT+0100']
 
   const [monthlyClick, setmonthlyClick] = useState<number[]>([]);
   const [result, setResult] = useState<any>({
@@ -43,6 +43,9 @@ const LineCharting: React.FC<properties> = ({
     data: [],
     value: "weekly",
   });
+  const [yearlyAverage,setYearlyAverage] = useState<any>([])
+  const [yearlyMonths,setYearlyMonths] = useState<any>([])
+
 
   useEffect(() => {
     // if(update){
@@ -157,10 +160,11 @@ const LineCharting: React.FC<properties> = ({
   };
 
   const getyearlyClick = () => {
-    let currentYear: any = [];
-    const list: any = [];
-    const finalArray: any = [];
-    let getmonths: any = [];
+    const yearname = []
+    let currentYear: string[] = [];
+    let list: any = [];
+    const result: string[] = [];
+    let getmonths: string[] = [];
     //clockin
     clockin.map((dates) => {
       if (
@@ -171,15 +175,26 @@ const LineCharting: React.FC<properties> = ({
       }
     });
 
-    currentYear.map((months: any) => {
-      for (let i = 0; i <= monthsName.length; i++) {
-        if (moment(months).toString().split(" ")[1] == monthsName[i]) {
-          list.push(moment(months).toString().split(" ")[1]);
+    monthsName.map((months: any) => {
+      currentYear.map((names:string)=> {
+        if(months == moment(names).toString().split(" ")[1]) {
+          list.push(+moment(names).format("HH:mm").split(":").join("."))
+          getmonths.push(moment(names).toString().split(" ")[1])
         }
-        console.log(list);
-      }
+      })
+      list.length == 0? list=[] : result.push(list)
+      list = []
     });
+    const reduced = result.map((arr: any) =>
+      arr.reduce((sum: "", item: number) => (sum += item / arr.length), 0)
+    );
+    setYearlyAverage(reduced)
+    console.log(yearlyAverage,'average for yearly')
+    //removing duplicate months from our getmonths
+    const val = removeDuplicate(getmonths)
+    setYearlyMonths(val)
   };
+ 
 
   const onChangeHandler = () => {
     if (result.value == "weekly") {
@@ -200,8 +215,8 @@ const LineCharting: React.FC<properties> = ({
     } else if (result.value == "yearly") {
       setShowmonth(false);
       return setResult({
-        labels: ["jan", "feb", "march", "april"],
-        data: [6, 7, 9, 4],
+        labels:yearlyMonths,
+        data: yearlyAverage,
         value: "yearly",
       });
     }
@@ -243,7 +258,7 @@ const LineCharting: React.FC<properties> = ({
         <Typography style={{ color: "#5019EE" }} variant="h5">
           {instance}
         </Typography>
-        <Box style={{ display: "flex", alignItems: "center" }}>
+        <Box style={{ display: "flex", alignItems: "center"}}>
           <img src={filter} alt="filter" width="20px" />
           <Box>
             <FormControl
