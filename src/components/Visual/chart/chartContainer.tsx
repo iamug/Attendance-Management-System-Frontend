@@ -234,11 +234,11 @@ const handleMonthly = (event: React.ChangeEvent<{ name?: string; value: any }>) 
 return (
         <> 
          <Box className={classes.stats}>
-                <Typography style={{color:"#5019EE"}} variant="h5">{instance}</Typography>
+                <Typography className={classes.instance} variant="h5">{instance}</Typography>
                 <Box style={{display:'flex',alignItems:'center'}}>
                     <img src={filter} alt="filter" width="20px"  />
                     <Box>
-                        <FormControl style={{marginBottom:'1rem'}} variant="outlined" className={classes.formControl}>
+                        <FormControl variant="outlined" className={classes.formControl}>
                             {/* <InputLabel htmlFor="outlined-age-native-simple">{val=='weekly' || val=='monthly' || val=='yearly' ? null : 'weekly'}</InputLabel> */}
                             <Select
                             style={{padding:0}}
@@ -313,21 +313,37 @@ createStyles({
     backgroundColor: "#5019EE",
     borderRadius: 10,
   },
-  recenter:{
-    display:'flex',
-    padding:"0rem 4rem",
+  recenter: {
+    display: "flex",
+    padding: "0rem 4rem",
     [theme.breakpoints.down("sm")]: {
-        padding: "0 2rem",
-      },
+      padding: "0 1rem",
+    },
+    [theme.breakpoints.down("xs")]: {
+      fontSize: "12px",
+      marginTop:"1rem"
+    },
   },
-  stats:{
-    display:'flex',
-    justifyContent:'space-between',
-    alignItems:'center',
-    padding:"0rem 4rem",
+  instance:{
+    color:"#5019EE",
+     [theme.breakpoints.down("xs")]: {
+         fontSize: "18px",
+         alignSelf:'center',
+         marginBottom:"2rem"
+       },
+   },
+  stats: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "0rem 4rem",
     [theme.breakpoints.down("sm")]: {
-        padding: "0 2rem",
-      },
+      padding: "0 1rem",
+    },
+    [theme.breakpoints.down("xs")]: {
+      flexDirection:'column',
+      alignItems: "start",
+    },
   },
   smallDotOrange: {
     height: 10,

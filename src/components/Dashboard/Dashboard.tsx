@@ -37,7 +37,7 @@ const {userData} = useAppSelector(selectStateValues)
         <>
             <img src={background} className={classes.bkimage} alt="circular"/>
             <Header />
-            <Typography variant="h3" style={{padding:"0rem 4rem",marginBottom:'7rem'}}>
+            <Typography variant="h3" className={classes.handler}>
                 <Typography className={classes.name}>Welcome back, {userData.firstname}</Typography>
                 <Box className={classes.buttons}>
                     <ClockInModal openCi={openCi} setOpenCi={setOpenCi} openCo={openCo} setOpenCo={setOpenCo} name={`${userData.firstname} ${userData.lastname}`}/>
@@ -49,11 +49,13 @@ const {userData} = useAppSelector(selectStateValues)
                     </Button> 
                 </Box>     
             </Typography>
-            <LineCharting instance="Stats/Opening Hours" timing1="Punctual" timing2="Late" update={update}/>
-            <Box component="span" className={classes.hours}>
-                <h3 style={{color:"#5019EE"}}>Punctual days</h3>
-                <h3 style={{color:"#5019EE"}}>Late Days</h3>
-            </Box>
+            <div style={{marginTop:'5rem'}} >
+               <LineCharting instance="Stats/Opening Hours" timing1="Punctual" timing2="Late" update={update}/>
+            </div>
+            {/* <Box component="span" className={classes.hours}>
+                <h3 className={classes.text} style={{color:"#5019EE"}}>Punctual days</h3>
+                <h3 className={classes.text}  style={{color:"#5019EE"}}>Late Days</h3>
+            </Box> */}
             <DoughtnutContainer update={update}/>
             <ChartContainer instance="Stats/Closing Hours" timing1="Close Early" timing2="Close Normal/late" update={update}/>
                 {/* <div style={{marginTop:'3rem'}}>
@@ -78,8 +80,19 @@ const useStyles = makeStyles((theme) => ({
         padding:"0rem 4rem",
         [theme.breakpoints.down("sm")]: {
         padding: "0rem 2rem",
-      }
-
+      },
+    },
+    handler:{
+        padding:"0rem 4rem",
+        marginBottom:'7rem',
+        [theme.breakpoints.down("xs")]: {
+            padding: "0rem 1.5rem",
+          }
+    },
+    text:{
+        [theme.breakpoints.down("xs")]: {
+            fontSize: "12px",
+          } 
     },
     check:{
         width:'13rem',

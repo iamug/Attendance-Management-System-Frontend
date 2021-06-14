@@ -40,7 +40,7 @@ const LineChart:React.FC<lines> = ({labels,data,title}:lines) => {
                     }],
                     
                 }}
-                height={150}
+                height={120}  
                 width={300}
                 options={{
                    plugins: {
@@ -82,9 +82,12 @@ const useStyles = makeStyles((theme) => ({
         width:'90%',
         margin:'5rem auto',
         [theme.breakpoints.down("sm")]: {
-         width: "95%"
+         width: "95%",
+         marginTop:'3rem'
+
        }
-    }
+    },
+  
 }))
 
 

@@ -1,5 +1,6 @@
 import React,{useEffect,useState} from 'react'
 import DoughnutType from './Doughnut'
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import axios from 'axios';
 import {baseUrl} from '../../../constants/index'
@@ -9,6 +10,8 @@ interface properties {
     update:boolean
   }
 const DoughnutContainer = ({update}:properties) => {
+    const classes = useStyles();
+
    const [punctual,setPunctual] = useState<any>([])
    let [behind,setBehind] = useState<any>([])
     let behindData:number[] = []
@@ -120,14 +123,15 @@ const DoughnutContainer = ({update}:properties) => {
 
     
     return (
-        <Grid  container>
+        <Grid  container className={classes.main}>
             <Grid
                 item
                 container
                 sm={12}
                 md={6}
-                style={{marginBottom:"5rem"}}
+                className={classes.content}
             >
+                 <h3 className={classes.text1}>Punctual days</h3> 
                 <DoughnutType 
                     data={punctual}
                     backgroundColor={["#EEB219", "#02C12C","#5019EE","#D3C5FB","#581845"]} 
@@ -136,13 +140,15 @@ const DoughnutContainer = ({update}:properties) => {
                     sort={true}
                 />  
             </Grid>
+           
             <Grid
                 item
                 container
                 sm={12}
                 md={6}
-                style={{marginBottom:"5rem"}}
+                className={classes.content}
             >
+                 <h3 className={classes.text2}>Late Days</h3>
                 <DoughnutType 
                     data={behind}
                     backgroundColor={["#EE4C19","#160547","grey","#182567","orange"]}
@@ -159,5 +165,36 @@ const DoughnutContainer = ({update}:properties) => {
 
 }
 
-
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    main: {
+      [theme.breakpoints.down("xs")]: {
+        padding:'1rem 2.5rem'
+      },
+    },
+    content: {
+       display:'flex',
+       flexDirection:'column',
+       marginBottom:'8rem'
+      },
+      text1:{
+        color:"#5019EE",
+        textAlign:'left',
+        padding:'0 10rem',
+        [theme.breakpoints.down("xs")]: {
+            textAlign:'center',
+            padding:'0px 0px'
+          },
+      },
+      text2:{
+        color:"#5019EE",
+        padding:'0 10rem',
+        textAlign:'right',
+        [theme.breakpoints.down("xs")]: {
+            textAlign:'center',
+            padding:'0px 0px'
+          },
+      }
+})
+)
 export default DoughnutContainer

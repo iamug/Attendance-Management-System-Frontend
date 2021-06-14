@@ -255,20 +255,19 @@ const LineCharting: React.FC<properties> = ({
   return (
     <>
       <Box className={classes.stats}>
-        <Typography style={{ color: "#5019EE" }} variant="h5">
+        <Typography className={classes.instance} variant="h5">
           {instance}
         </Typography>
-        <Box style={{ display: "flex", alignItems: "center"}}>
+        <Box style={{ display: "flex",alignItems: "center"}}>
           <img src={filter} alt="filter" width="20px" />
-          <Box>
+          <Box style={{alignSelf:'center'}}>
             <FormControl
-              style={{ marginBottom: "1rem" }}
               variant="outlined"
               className={classes.formControl}
             >
               {/* <InputLabel htmlFor="outlined-age-native-simple">{val=='weekly' || val=='monthly' || val=='yearly' ? null : 'weekly'}</InputLabel> */}
               <Select
-                style={{ padding: 0 }}
+                style={{ padding: 0}}
                 native
                 value={result.value}
                 onChange={handleChange}
@@ -342,11 +341,23 @@ const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: "#5019EE",
       borderRadius: 10,
     },
+    instance:{
+      color:"#5019EE",
+       [theme.breakpoints.down("xs")]: {
+           fontSize: "18px",
+           alignSelf:'center',
+           marginBottom:"2rem"
+         },
+     },
     recenter: {
       display: "flex",
       padding: "0rem 4rem",
       [theme.breakpoints.down("sm")]: {
-        padding: "0 2rem",
+        padding: "0 1rem",
+      },
+      [theme.breakpoints.down("xs")]: {
+        fontSize: "12px",
+        marginTop:"1rem"
       },
     },
     stats: {
@@ -355,7 +366,11 @@ const useStyles = makeStyles((theme: Theme) =>
       alignItems: "center",
       padding: "0rem 4rem",
       [theme.breakpoints.down("sm")]: {
-        padding: "0 2rem",
+        padding: "0 1rem",
+      },
+      [theme.breakpoints.down("xs")]: {
+        flexDirection:'column',
+        alignItems: "start",
       },
     },
     smallDotOrange: {

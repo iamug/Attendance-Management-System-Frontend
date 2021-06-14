@@ -38,7 +38,7 @@ const LineChart:React.FC<lines> = ({labels,data,title}:lines) => {
                     }],
                     
                 }}
-                height={150}
+                height={120}
                 width={300}
                 options={{
                     scales: {
