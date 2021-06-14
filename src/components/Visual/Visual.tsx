@@ -259,7 +259,7 @@ const LineCharting: React.FC<properties> = ({
           {instance}
         </Typography>
         <Box style={{ display: "flex",alignItems: "center"}}>
-          <img src={filter} alt="filter" width="20px" />
+          <img style={{zIndex:300}} src={filter} alt="filter" width="20px" />
           <Box style={{alignSelf:'center'}}>
             <FormControl
               variant="outlined"
@@ -288,7 +288,7 @@ const LineCharting: React.FC<properties> = ({
       </Box>
       {showmonth && (
         <FormControl
-          style={{ paddingRight: "4rem", float: "right" }}
+          style={{ paddingRight: "6rem",marginTop:'1rem', float: "right" }}
           variant="outlined"
           className={classes.formControl}
         >
