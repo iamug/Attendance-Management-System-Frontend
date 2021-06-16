@@ -288,9 +288,8 @@ const LineCharting: React.FC<properties> = ({
       </Box>
       {showmonth && (
         <FormControl
-          style={{ paddingRight: "6rem",marginTop:'1rem', float: "right" }}
           variant="outlined"
-          className={classes.formControl}
+          className={classes.formControlBox}
         >
           <Select
             style={{ padding: 0 }}
@@ -334,6 +333,19 @@ const useStyles = makeStyles((theme: Theme) =>
       margin: theme.spacing(0),
       minWidth: 70,
       marginLeft: "10px",
+    },
+    formControlBox: {
+      margin: theme.spacing(0),
+      minWidth: 70,
+      marginLeft:'10px',
+      paddingRight: "6rem",
+      marginTop:'1rem',
+      float:'right',
+      [theme.breakpoints.down("xs")]: {
+        float:'none',
+        marginTop:'.5rem',
+        marginLeft:'3rem', 
+      }
     },
     smallDotBlue: {
       height: 10,

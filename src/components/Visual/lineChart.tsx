@@ -40,9 +40,12 @@ const LineChart:React.FC<lines> = ({labels,data,title}:lines) => {
                     }],
                     
                 }}
-                height={120}  
+                // height={120}  
+                height={550}  
                 width={300}
                 options={{
+                    responsive: true,
+                    maintainAspectRatio: false,
                    plugins: {
                        scales: {
                     xAxes: [{
@@ -84,8 +87,10 @@ const useStyles = makeStyles((theme) => ({
         [theme.breakpoints.down("sm")]: {
          width: "95%",
          marginTop:'3rem'
-
-       }
+       },
+       [theme.breakpoints.down("xs")]: {
+       height:'80vh'
+      }
     },
   
 }))

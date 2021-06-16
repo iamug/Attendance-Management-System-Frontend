@@ -38,9 +38,12 @@ const LineChart:React.FC<lines> = ({labels,data,title}:lines) => {
                     }],
                     
                 }}
-                height={120}
+                // height={120}
+                height={550}
                 width={300}
                 options={{
+                    responsive: true,
+                    maintainAspectRatio: false,
                     scales: {
                         xAxes: [{
                            gridLines: {
@@ -79,9 +82,13 @@ const useStyles = makeStyles((theme) => ({
         width:'90%',
         margin:'5rem auto',
         [theme.breakpoints.down("sm")]: {
-         width: "95%"
-       }
-    }
+         width: "95%",
+       },
+       [theme.breakpoints.down("xs")]: {
+       height:'80vh'
+      }
+    },
+  
 }))
 
 
