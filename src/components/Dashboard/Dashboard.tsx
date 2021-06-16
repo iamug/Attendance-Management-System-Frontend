@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useEffect, useState} from 'react'
 import Header from '../header/NavHeader'
 import { makeStyles } from "@material-ui/core/styles";
 import {Typography,Box,Button} from "@material-ui/core";
@@ -15,12 +15,15 @@ const Dashboard:React.FC = () => {
 
 const [openCi, setOpenCi] = useState<boolean>(false);
 const [openCo, setOpenCo] = useState<boolean>(false);
+let [update,setUpdate] = useState(false)
 
 const {userData} = useAppSelector(selectStateValues)
  const classes = useStyles()
 
- 
+
  const showModal = (name:string) => {
+    //  setUpdate(true)
+    setUpdate(!update)
      if(name == 'clockIn'){
          setOpenCi(true)
          setOpenCo(false)
@@ -34,7 +37,7 @@ const {userData} = useAppSelector(selectStateValues)
         <>
             <img src={background} className={classes.bkimage} alt="circular"/>
             <Header />
-            <Typography variant="h3" style={{padding:"0rem 4rem",marginBottom:'7rem'}}>
+            <Typography variant="h3" className={classes.handler}>
                 <Typography className={classes.name}>Welcome back, {userData.firstname}</Typography>
                 <Box className={classes.buttons}>
                     <ClockInModal openCi={openCi} setOpenCi={setOpenCi} openCo={openCo} setOpenCo={setOpenCo} name={`${userData.firstname} ${userData.lastname}`}/>
@@ -46,13 +49,15 @@ const {userData} = useAppSelector(selectStateValues)
                     </Button> 
                 </Box>     
             </Typography>
-            <LineCharting instance="Stats/Opening Hours" timing1="Punctual" timing2="Late"/>
-            <Box component="span" className={classes.hours}>
-                <h3 style={{color:"#5019EE"}}>Punctual days</h3>
-                <h3 style={{color:"#5019EE"}}>Late Days</h3>
-            </Box>
-            <DoughtnutContainer/>
-            <ChartContainer instance="Stats/Closing Hours" timing1="Close Early" timing2="Close Normal/late"/>
+            <div style={{marginTop:'5rem'}} >
+               <LineCharting instance="Stats/Opening Hours" timing1="Punctual" timing2="Late" update={update}/>
+            </div>
+            {/* <Box component="span" className={classes.hours}>
+                <h3 className={classes.text} style={{color:"#5019EE"}}>Punctual days</h3>
+                <h3 className={classes.text}  style={{color:"#5019EE"}}>Late Days</h3>
+            </Box> */}
+            <DoughtnutContainer update={update}/>
+            <ChartContainer instance="Stats/Closing Hours" timing1="Close Early" timing2="Close Normal/late" update={update}/>
                 {/* <div style={{marginTop:'3rem'}}>
                     <LineCharting instance="Stats/Closing Hours" timing1="close Early" timing2="close Normal/late"/>
                 </div> */}
@@ -62,6 +67,7 @@ const {userData} = useAppSelector(selectStateValues)
 }
 
 const useStyles = makeStyles((theme) => ({
+
     bkimage:{
         position:"absolute",
         top:0,
@@ -74,14 +80,25 @@ const useStyles = makeStyles((theme) => ({
         padding:"0rem 4rem",
         [theme.breakpoints.down("sm")]: {
         padding: "0rem 2rem",
-      }
-
+      },
+    },
+    handler:{
+        padding:"0rem 4rem",
+        marginBottom:'7rem',
+        [theme.breakpoints.down("xs")]: {
+            padding: "0rem 1.5rem",
+          }
+    },
+    text:{
+        [theme.breakpoints.down("xs")]: {
+            fontSize: "12px",
+          } 
     },
     check:{
         width:'13rem',
         padding:'.8rem 0',
         fontSize:'11px',
-        textTransform:"capitalize"
+        textTransform:"capitalize",
     },
     name: {
         fontSize:"17px",
@@ -93,7 +110,10 @@ const useStyles = makeStyles((theme) => ({
         marginTop:'3rem',
         display:"flex",
         justifyContent:"center",
-        color:"#fff"
+        color:"#fff",
+        // [theme.breakpoints.down("sm")]: {
+        //     justifyContent:'left',
+        //   }
     }
 
 }))

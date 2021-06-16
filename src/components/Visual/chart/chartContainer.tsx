@@ -3,10 +3,10 @@ import {Typography,Box,Button} from "@material-ui/core";
 import filter from '../../../assets/images/filter.svg'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
-import {actualMonth} from '../../../constants'
+import {actualMonth,monthsName} from '../../../constants'
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import LineChart from '../lineChart'
+import LineChart from './chart'
 import moment from 'moment';
 import axios from 'axios'
 import {baseUrl} from '../../../constants'
@@ -17,9 +17,10 @@ interface properties{
 instance:string,
 timing1?:string,
 timing2:string;
+update:boolean
 }
 
-const LineCharting:React.FC<properties> = ({instance,timing1,timing2}:properties):ReactElement => {
+const LineCharting:React.FC<properties> = ({instance,timing1,timing2,update}:properties):ReactElement => {
   const classes = useStyles();
 
   const [actualWeek,setActualWeek] = useState<any>([])
@@ -29,7 +30,7 @@ const LineCharting:React.FC<properties> = ({instance,timing1,timing2}:properties
   const [month,setMonth] = useState<{monthName:string}>({monthName:moment().format('MMMM')})
   const [clockin,setClockin] = useState<string[]>([])
   const [checker,setchecker] = useState(false)
-  // const tx:string[] = ['Tue Jun 08 2021 15:38:32 GMT+0100','Mon Jun 07 2021 02:38:32 GMT+0100','Tue May 20 2021 03:00:32 GMT+0100','Mon May 17 2021 06:05:32 GMT+0100','Tue May 18 2021 04:10:32 GMT+0100','Wed May 26 2021 07:30:32 GMT+0100','Tue May 27 2021 17:11:32 GMT+0100','Mon May 03 2021 09:10:32 GMT+0100','Tue May 04 2021 05:20:32 GMT+0100','Sun May 02 2021 11:04:32 GMT+0100','Sun Feb 21 2021 02:30:32 GMT+0100']
+  const tx:string[] = ['Tue Jun 08 2021 15:38:32 GMT+0100','Mon Jun 07 2021 02:38:32 GMT+0100','Tue May 20 2021 03:00:32 GMT+0100','Mon May 17 2021 06:05:32 GMT+0100','Tue May 18 2021 04:10:32 GMT+0100','Wed May 26 2021 07:30:32 GMT+0100','Tue May 27 2021 17:11:32 GMT+0100','Mon May 03 2021 09:10:32 GMT+0100','Tue May 04 2021 05:20:32 GMT+0100','Sun May 02 2021 11:04:32 GMT+0100','Sun Feb 21 2021 02:30:32 GMT+0100']
 
   const [monthlyClick,setmonthlyClick] = useState<number[]>([])
   const [result,setResult] = useState<any>({
@@ -38,13 +39,21 @@ const LineCharting:React.FC<properties> = ({instance,timing1,timing2}:properties
     value:'weekly'
   })
 
+  const [yearlyAverage,setYearlyAverage] = useState<any>([])
+  const [yearlyMonths,setYearlyMonths] = useState<any>([])
+
+
 useEffect(()=> {
-getData()
-getMonth()
-},[])
+  setTimeout(
+    getDataSet
+  ,3000)
+},[update])
+
+
 
 useEffect(()=> {
   getMonthClick()
+  getyearlyClick()
 },[clockin,check])
 
 useEffect(()=> {
@@ -52,7 +61,7 @@ useEffect(()=> {
 },[check,monthlyClick])
 
 
-  const getData = async() => {
+  const getDataSet = async() => {
     const weekValue:any = []
     const weektime:any= []
     const clockInArr:any = []
@@ -129,6 +138,42 @@ const getMonthClick = () => {
  
 }
 
+const getyearlyClick = () => {
+  const yearname = []
+  let currentYear: string[] = [];
+  let list: any = [];
+  const result: string[] = [];
+  let getmonths: string[] = [];
+  //clockin
+  clockin.map((dates) => {
+    if (
+      moment(dates).toString().split(" ")[3] ==
+      moment().toString().split(" ")[3]
+    ) {
+      currentYear.push(dates);
+    }
+  });
+
+  monthsName.map((months: any) => {
+    currentYear.map((names:string)=> {
+      if(months == moment(names).toString().split(" ")[1]) {
+        list.push(+moment(names).format("HH:mm").split(":").join("."))
+        getmonths.push(moment(names).toString().split(" ")[1])
+      }
+    })
+    list.length == 0? list=[] : result.push(list)
+    list = []
+  });
+  const reduced = result.map((arr: any) =>
+    arr.reduce((sum: "", item: number) => (sum += item / arr.length), 0)
+  );
+  setYearlyAverage(reduced)
+  console.log(yearlyAverage,'average for yearly')
+  //removing duplicate months from our getmonths
+  const val = removeDuplicate(getmonths)
+  setYearlyMonths(val)
+};
+
 
 const onChangeHandler = () => {
   if(result.value == 'weekly'){
@@ -143,7 +188,7 @@ const onChangeHandler = () => {
      setchecker(!checker)
     setShowmonth(true)
     return setResult({
-      labels:['week1','week2','week3','week4'],
+      labels:['week1','week2','week3','week4','week5'],
       data:monthlyClick,
       value:'monthly'
     })
@@ -151,8 +196,8 @@ const onChangeHandler = () => {
   else if(result.value == 'yearly'){
     setShowmonth(false)
     return setResult({
-      labels:['jan','feb','march','april'],
-      data:[6,7,9,4,],
+      labels:yearlyMonths,
+      data:yearlyAverage,
       value:'yearly'
     })
   }
@@ -189,11 +234,11 @@ const handleMonthly = (event: React.ChangeEvent<{ name?: string; value: any }>) 
 return (
         <> 
          <Box className={classes.stats}>
-                <Typography style={{color:"#5019EE"}} variant="h5">{instance}</Typography>
+                <Typography className={classes.instance} variant="h5">{instance}</Typography>
                 <Box style={{display:'flex',alignItems:'center'}}>
                     <img src={filter} alt="filter" width="20px"  />
                     <Box>
-                        <FormControl style={{marginBottom:'1rem'}} variant="outlined" className={classes.formControl}>
+                        <FormControl variant="outlined" className={classes.formControl}>
                             {/* <InputLabel htmlFor="outlined-age-native-simple">{val=='weekly' || val=='monthly' || val=='yearly' ? null : 'weekly'}</InputLabel> */}
                             <Select
                             style={{padding:0}}
@@ -217,7 +262,7 @@ return (
             </Box>
             {
               showmonth && 
-              <FormControl style={{paddingRight:'4rem',float:'right'}} variant="outlined" className={classes.formControl}>
+              <FormControl variant="outlined" className={classes.formControlBox}>
                             <Select
                             style={{padding:0}}
                             native
@@ -262,27 +307,56 @@ createStyles({
     minWidth: 70,
     marginLeft:'10px'
   }, 
+  formControlBox: {
+    margin: theme.spacing(0),
+    minWidth: 70,
+    marginLeft:'10px',
+    paddingRight: "6rem",
+    marginTop:'1rem',
+    float:'right',
+    [theme.breakpoints.down("xs")]: {
+      float:'none',
+      marginTop:'.5rem',
+      marginLeft:'3rem', 
+    }
+  },
   smallDotBlue: {
     height: 10,
     width: 10,
     backgroundColor: "#5019EE",
     borderRadius: 10,
   },
-  recenter:{
-    display:'flex',
-    padding:"0rem 4rem",
+  recenter: {
+    display: "flex",
+    padding: "0rem 4rem",
     [theme.breakpoints.down("sm")]: {
-        padding: "0 2rem",
-      },
+      padding: "0 1rem",
+    },
+    [theme.breakpoints.down("xs")]: {
+      fontSize: "12px",
+      marginTop:"1rem"
+    },
   },
-  stats:{
-    display:'flex',
-    justifyContent:'space-between',
-    alignItems:'center',
-    padding:"0rem 4rem",
+  instance:{
+    color:"#5019EE",
+     [theme.breakpoints.down("xs")]: {
+         fontSize: "18px",
+         alignSelf:'center',
+         marginBottom:"2rem"
+       },
+   },
+  stats: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "0rem 4rem",
     [theme.breakpoints.down("sm")]: {
-        padding: "0 2rem",
-      },
+      padding: "0 1rem",
+    },
+    [theme.breakpoints.down("xs")]: {
+      flexDirection:'column',
+      alignItems: "start",
+    },
   },
   smallDotOrange: {
     height: 10,

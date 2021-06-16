@@ -40,26 +40,30 @@ const LineChart:React.FC<lines> = ({labels,data,title}:lines) => {
                     }],
                     
                 }}
-                height={150}
+                // height={120}  
+                height={550}  
                 width={300}
                 options={{
-                    scales: {
-                        xAxes: [{
-                           gridLines: {
-                              display: false
-                           }
-                        }],
-                        yAxes: [{
-                           gridLines: {
-                              display: false
-                           }
-                        }]
-                   },
+                    responsive: true,
+                    maintainAspectRatio: false,
                    plugins: {
+                       scales: {
+                    xAxes: [{
+                       gridLines: {
+                          display: false
+                       }
+                    }],
+                    yAxes: [{
+                       gridLines: {
+                          display: false
+                       }
+                    }]
+               },
                     title: {
                         display: true,
                         text: title
                     },
+                    
                     legend: {
                         display: false
                       },
@@ -81,9 +85,14 @@ const useStyles = makeStyles((theme) => ({
         width:'90%',
         margin:'5rem auto',
         [theme.breakpoints.down("sm")]: {
-         width: "95%"
-       }
-    }
+         width: "95%",
+         marginTop:'3rem'
+       },
+       [theme.breakpoints.down("xs")]: {
+       height:'80vh'
+      }
+    },
+  
 }))
 
 

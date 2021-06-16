@@ -16,7 +16,6 @@ const LineChart:React.FC<lines> = ({labels,data,title}:lines) => {
             <Line
                 type="line"
                 data={{
-                    // labels:['Monday', 'Tuesday','Wednesday','Thursday','Friday'],
                     labels,
                     datasets: [{
                         // data: [9,11, 9, 10, 9.2,7],
@@ -39,9 +38,12 @@ const LineChart:React.FC<lines> = ({labels,data,title}:lines) => {
                     }],
                     
                 }}
-                height={150}
+                // height={120}
+                height={550}
                 width={300}
                 options={{
+                    responsive: true,
+                    maintainAspectRatio: false,
                     scales: {
                         xAxes: [{
                            gridLines: {
@@ -80,9 +82,13 @@ const useStyles = makeStyles((theme) => ({
         width:'90%',
         margin:'5rem auto',
         [theme.breakpoints.down("sm")]: {
-         width: "95%"
-       }
-    }
+         width: "95%",
+       },
+       [theme.breakpoints.down("xs")]: {
+       height:'80vh'
+      }
+    },
+  
 }))
 
 

@@ -87,6 +87,8 @@ const DoughnutType:React.FC<DoughnutInt> = ({data,right,left,backgroundColor,wee
                     legend: {
                         display: false
                       },
+                //   responsive: true,
+                //   maintainAspectRatio: true,
                 }}
              /> 
             <h3 style={{position:'absolute',top:'40%',left:'45%'}}>Weekly</h3>
@@ -109,10 +111,10 @@ innerWrapper:{
     alignItems:'center',
     backgroundColor:'whitesmoke',
     borderRadius:'15px',
-    position:'relative'
-    // [theme.breakpoints.down("sm")]: {
-    //     width: "90%",
-    //   },
+    position:'relative',
+    [theme.breakpoints.down("xs")]: {
+        flexDirection:'column',
+      },
 },
 
 extension:{
