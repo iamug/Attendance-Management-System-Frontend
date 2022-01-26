@@ -1,10 +1,10 @@
 import axios from "axios";
 import { baseUrl } from "../constants/index";
 
-const headers = {
-  "Content-Type": "application/json",
-  Authorization: `Bearer ${localStorage.getItem("user-token")}`,
-};
+// const headers = {
+//   "Content-Type": "application/json",
+//   Authorization: `Bearer ${localStorage.getItem("user-token")}`,
+// }
 
 interface location {
   lat: number;
@@ -29,6 +29,8 @@ export async function clockinUserDashboard(
     lat:number,   
     long:number
   },
+  type:string,
+  token:string,
   openCi?:boolean
 ): Promise<any> {
   try {
@@ -37,7 +39,11 @@ export async function clockinUserDashboard(
     let body = {
       location
     };
-    const response = await axios.post(`${baseUrl}${clock}`, body, { headers });
+
+    const response = await axios.post(`${baseUrl}${clock}`, body, {headers:{
+      "Content-Type": type,
+       Authorization: token,
+    }} );
     return response;
   } catch (error) {
     return error.response;
