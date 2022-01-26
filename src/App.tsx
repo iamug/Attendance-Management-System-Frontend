@@ -44,7 +44,7 @@ function App() {
   const auth = useAppSelector(selectStateValues);
 
   return (
-    <Router>
+    <Router basename={process.env.PUBLIC_URL}>
       <ThemeProvider theme={theme}>
         <Switch>
           <Route path="/" exact component={LandingPage} />
