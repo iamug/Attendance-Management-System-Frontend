@@ -82,7 +82,7 @@ const LineCharting: React.FC<properties> = ({
     });
     setClockin(clockInArr);
     clockInArr.map((value: any) => {
-      const currentWeek = moment().week() - 1;
+      const currentWeek = moment().week();
       if (moment(value).week() == currentWeek) {
         const weekName = moment(value).toString().split(" ")[0];
         weekValue.push(weekName);
