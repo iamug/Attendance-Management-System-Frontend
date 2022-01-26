@@ -1,0 +1,30 @@
+{
+  "files": {
+    "main.css": "/Attendance-Management-System-Frontend/static/css/main.0c143e47.chunk.css",
+    "main.js": "/Attendance-Management-System-Frontend/static/js/main.24d441f9.chunk.js",
+    "main.js.map": "/Attendance-Management-System-Frontend/static/js/main.24d441f9.chunk.js.map",
+    "runtime-main.js": "/Attendance-Management-System-Frontend/static/js/runtime-main.c363ebe5.js",
+    "runtime-main.js.map": "/Attendance-Management-System-Frontend/static/js/runtime-main.c363ebe5.js.map",
+    "static/js/2.69e584f1.chunk.js": "/Attendance-Management-System-Frontend/static/js/2.69e584f1.chunk.js",
+    "static/js/2.69e584f1.chunk.js.map": "/Attendance-Management-System-Frontend/static/js/2.69e584f1.chunk.js.map",
+    "index.html": "/Attendance-Management-System-Frontend/index.html",
+    "static/css/main.0c143e47.chunk.css.map": "/Attendance-Management-System-Frontend/static/css/main.0c143e47.chunk.css.map",
+    "static/js/2.69e584f1.chunk.js.LICENSE.txt": "/Attendance-Management-System-Frontend/static/js/2.69e584f1.chunk.js.LICENSE.txt",
+    "static/media/avatar2.d55956ab.png": "/Attendance-Management-System-Frontend/static/media/avatar2.d55956ab.png",
+    "static/media/background.b50a9994.svg": "/Attendance-Management-System-Frontend/static/media/background.b50a9994.svg",
+    "static/media/bg_landscape.5daf5c62.png": "/Attendance-Management-System-Frontend/static/media/bg_landscape.5daf5c62.png",
+    "static/media/bg_portrait.553d582d.png": "/Attendance-Management-System-Frontend/static/media/bg_portrait.553d582d.png",
+    "static/media/dropdown.e2cf138f.svg": "/Attendance-Management-System-Frontend/static/media/dropdown.e2cf138f.svg",
+    "static/media/feat1.b7d5818d.png": "/Attendance-Management-System-Frontend/static/media/feat1.b7d5818d.png",
+    "static/media/feat2.58547a98.png": "/Attendance-Management-System-Frontend/static/media/feat2.58547a98.png",
+    "static/media/feat3.d7e73bf1.png": "/Attendance-Management-System-Frontend/static/media/feat3.d7e73bf1.png",
+    "static/media/headerBanner.ced34f81.png": "/Attendance-Management-System-Frontend/static/media/headerBanner.ced34f81.png",
+    "static/media/phone.3c08bf1f.png": "/Attendance-Management-System-Frontend/static/media/phone.3c08bf1f.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.c363ebe5.js",
+    "static/js/2.69e584f1.chunk.js",
+    "static/css/main.0c143e47.chunk.css",
+    "static/js/main.24d441f9.chunk.js"
+  ]
+}
