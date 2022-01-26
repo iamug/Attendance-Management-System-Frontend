@@ -36,7 +36,7 @@
   "scripts": {
     "start": "react-scripts start",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -b build -d build -f  -r https://github.com/iamug/Attendance-Management-System-Frontend.git",
+    "deploy": "gh-pages -b build -d build -f",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
